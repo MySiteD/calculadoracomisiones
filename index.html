@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Comisiones</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para el ícono de WhatsApp -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .result-item {
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+        .result-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .terminal-logo {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            object-fit: contain;
+        }
+        .result-details {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .net-amount {
+            font-size: 1.5rem;
+            text-align: center;
+            width: 150px;
+        }
+        .commission, .iva, .total { color: #4682B4; text-align: center; }
+        .net { color: #28a745; font-weight: bold; }
+        #history {
+            margin-top: 30px;
+        }
+        .rates-info {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        #shareBtn {
+            background-color: #25D366;
+            color: #FFFFFF;
+            border-color: #25D366;
+        }
+        #shareBtn:hover {
+            background-color: #1DA851;
+            color: #FFFFFF;
+        }
+        /* Media query para pantallas móviles */
+        @media (max-width: 768px) {
+            .net-amount {
+                font-size: 1rem;
+                width: 100px;
+            }
+            .result-details {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .commission, .iva, .total {
+                margin-bottom: 5px;
+                width: 100%;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1 class="text-center mb-4">Calculadora de Comisiones de Terminales de Venta</h1>
+        <label for="amount" class="form-label">Ingresa la cantidad a cobrar</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">$</span>
+            <input type="number" id="amount" class="form-control" placeholder="Ej: 1000" min="1">
+            <button class="btn btn-success" onclick="calculate()">Calcular</button>
+        </div>
+        <div id="results" class="mt-4"></div>
+        <div class="d-flex justify-content-between mt-3">
+            <button id="shareBtn" class="btn btn-primary" style="display: none;">
+                <i class="fab fa-whatsapp"></i> Compartir por WhatsApp
+            </button>
+            <button id="downloadBtn" class="btn btn-info" style="display: none;">Descargar PDF</button>
+        </div>
+        <div id="history">
+            <h3 class="mt-4">
+                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#historyCollapse" aria-expanded="false" aria-controls="historyCollapse">
+                    Historial de Cálculos
+                </button>
+            </h3>
+            <div class="collapse" id="historyCollapse">
+                <button class="btn btn-secondary mb-2" onclick="clearHistory()">Limpiar Historial</button>
+                <div id="historyList"></div>
+            </div>
+        </div>
+        <div id="ratesInfo" class="rates-info" style="display: none;"></div>
+    </div>
+
+    <!-- Bootstrap JS y jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+        let providers = [
+            { name: 'Mercado Pago', rate: 0.035 },
+            { name: 'Clip', rate: 0.036 },
+            { name: 'Uala Bis', rate: 0.032 },
+            { name: 'Zettle', rate: 0.031 }
+        ]; // Lista predeterminada por si el CSV falla
+
+        const logoUrls = {
+            'Mercado Pago': './logos/mercado-pago.png',
+            'Clip': './logos/clip.png',
+            'Uala Bis': './logos/uala-bis.png',
+            'Zettle': './logos/zettle.png'
+        };
+
+        // Intentar cargar datos desde el CSV de Google Sheets
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSO80a7kTMAV55psfXj8EYV_eta9hA0nqwbBev0tH7YZtmhtYT44LDXxMTNv3RMOX7Kv_bw1Z-tO8Tc/pub?gid=899706662&single=true&output=csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const rows = csvText.split('\n').slice(1);
+                const newProviders = rows.map(row => {
+                    const [terminal, rate] = row.split(',');
+                    const parsedRate = parseFloat(rate.trim()) || 0;
+                    return { name: terminal.trim(), rate: parsedRate };
+                }).filter(p => p.rate > 0);
+                if (newProviders.length > 0) providers = newProviders; // Actualizar solo si hay datos válidos
+                loadHistory();
+                updateRatesInfo();
+            })
+            .catch(error => {
+                console.error('Error al cargar el CSV, usando valores predeterminados:', error);
+                loadHistory();
+                updateRatesInfo();
+            });
+
+        function updateRatesInfo() {
+            const ratesInfo = document.getElementById('ratesInfo');
+            let ratesHtml = '<p><strong>Porcentajes de comisión:</strong></p>';
+            providers.forEach(provider => {
+                const percentage = (provider.rate * 100).toFixed(2);
+                ratesHtml += `<p>- ${provider.name}: ${percentage}%</p>`;
+            });
+            const lastUpdated = new Date().toLocaleString('es-MX', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+            ratesHtml += `<p><small>Última actualización: ${lastUpdated}</small></p>`;
+            ratesInfo.innerHTML = ratesHtml;
+        }
+
+        function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const resultsDiv = document.getElementById('results');
+            const shareBtn = document.getElementById('shareBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const ratesInfo = document.getElementById('ratesInfo');
+
+            if (isNaN(amount) || amount <= 0) {
+                resultsDiv.innerHTML = '<div class="alert alert-danger">Por favor, ingresa un monto válido mayor a $0.</div>';
+                shareBtn.style.display = 'none';
+                downloadBtn.style.display = 'none';
+                ratesInfo.style.display = 'none';
+                return;
+            }
+
+            let resultsHtml = '<h2 class="text-center">Resultados:</h2>';
+            const resultsData = [];
+            providers.forEach(provider => {
+                const commission = amount * provider.rate;
+                const iva = commission * 0.16;
+                const totalCommission = commission + iva;
+                const netAmount = amount - totalCommission;
+                resultsHtml += `
+                    <div class="card result-item">
+                        <div class="card-body d-flex align-items-center">
+                            <img src="${logoUrls[provider.name] || ''}" class="terminal-logo" alt="${provider.name} logo">
+                            <div class="result-details">
+                                <div class="commission">
+                                    <strong>Comisión:</strong><br>$${commission.toFixed(2)}
+                                </div>
+                                <div class="iva">
+                                    <strong>IVA:</strong><br>$${iva.toFixed(2)}
+                                </div>
+                                <div class="total">
+                                    <strong>Comisión total:</strong><br>$${totalCommission.toFixed(2)}
+                                </div>
+                            </div>
+                            <div class="net-amount net">
+                                <strong>Monto neto:</strong><br>$${netAmount.toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultsData.push({
+                    name: provider.name,
+                    commission: commission.toFixed(2),
+                    iva: iva.toFixed(2),
+                    total: totalCommission.toFixed(2),
+                    net: netAmount.toFixed(2)
+                });
+            });
+
+            resultsDiv.innerHTML = resultsHtml;
+            shareBtn.style.display = 'block';
+            downloadBtn.style.display = 'block';
+            ratesInfo.style.display = 'block';
+
+            // Guardar en historial
+            const timestamp = new Date().toLocaleString();
+            const historyEntry = { amount, results: resultsData, timestamp };
+            saveToHistory(historyEntry);
+            loadHistory();
+
+            // Configurar botón de compartir
+            shareBtn.onclick = () => {
+                const message = `Resultados para $${amount} (${timestamp}):\n${resultsData.map(r => `${r.name}:\nComisión: $${r.commission}\nIVA: $${r.iva}\nComisión total: $${r.total}\nMonto neto: $${r.net}`).join('\n\n')}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            };
+
+            // Configurar botón de descarga PDF
+            downloadBtn.onclick = () => {
+                const doc = new jsPDF();
+                doc.setFont('Helvetica');
+                doc.setFontSize(16);
+                doc.text('Calculadora de Comisiones de Terminales de Venta', 20, 20);
+                doc.setLineWidth(0.5);
+                doc.line(20, 25, 190, 25); // Línea divisoria
+                doc.setFontSize(12);
+                doc.text(`Monto: $${amount}`, 20, 35);
+                let y = 45;
+                resultsData.forEach(result => {
+                    doc.addImage(logoUrls[result.name] || '', 'PNG', 20, y, 15, 15); // Logo 15x15 mm
+                    doc.text(`${result.name}:`, 40, y + 5);
+                    doc.setTextColor(70, 130, 180); // Azul para valores
+                    y += 10; // Más espacio antes de los valores
+                    doc.text(`Comisión: $${result.commission}`, 40, y);
+                    y += 5;
+                    doc.text(`IVA: $${result.iva}`, 40, y);
+                    y += 5;
+                    doc.text(`Comisión total: $${result.total}`, 40, y);
+                    doc.setTextColor(40, 167, 69); // Verde para neto
+                    doc.text(`Monto neto: $${result.net}`, 170, y - 15, { align: 'right' }); // Alineado con el nombre
+                    doc.setTextColor(0, 0, 0); // Resetear color
+                    y += 30; // Espaciado entre resultados
+                });
+                y += 15; // Espaciado antes de porcentajes
+                doc.setFontSize(10);
+                doc.text('Porcentajes de comisión:', 20, y);
+                providers.forEach(provider => {
+                    const percentage = (provider.rate * 100).toFixed(2);
+                    doc.text(`- ${provider.name}: ${percentage}%`, 20, y + 5);
+                    y += 5;
+                });
+                doc.text(`Última actualización: ${new Date().toLocaleString('es-MX', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}`, 20, y + 5);
+                // Pie de página con fecha de generación
+                const pageHeight = doc.internal.pageSize.height;
+                doc.setFontSize(8);
+                doc.text(`Fecha de generación: ${new Date().toLocaleString('es-MX', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}`, 20, pageHeight - 10);
+                doc.save(`Resultados_Comisiones_${timestamp.replace(/[, :]/g, '-')}.pdf`);
+            };
+        }
+
+        function saveToHistory(entry) {
+            let history = JSON.parse(localStorage.getItem('calcHistory')) || [];
+            history.push(entry);
+            if (history.length > 10) history.shift(); // Limitar a 10 entradas
+            localStorage.setItem('calcHistory', JSON.stringify(history));
+        }
+
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            let history = JSON.parse(localStorage.getItem('calcHistory')) || [];
+            if (history.length === 0) {
+                historyList.innerHTML = '<p>No hay cálculos en el historial.</p>';
+                return;
+            }
+            let historyHtml = '';
+            history.forEach((entry, index) => {
+                historyHtml += `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6>Cálculo #${index + 1} - $${entry.amount} (${entry.timestamp})</h6>
+                            ${entry.results.map(r => `
+                                <p><strong>${r.name}:</strong> Comisión: $${r.commission}, IVA: $${r.iva}, Total: $${r.total}, Neto: $${r.net}</p>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            historyList.innerHTML = historyHtml;
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('calcHistory');
+            loadHistory();
+        }
+    </script>
+</body>
+</html>
