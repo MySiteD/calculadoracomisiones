@@ -52,6 +52,14 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
+        .terminal-logo {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
         .result-details {
             flex-grow: 1;
             display: flex;
@@ -266,7 +274,7 @@
         <div class="promotions-container">
             <h3>¡Aprovecha los beneficios de las siguientes promociones!</h3>
             <div class="promotion-item">
-                <img src="./logos/mercado-pago.png" alt="Mercado Pago Logo">
+                <img src="./logos/mercado-pago.png" onerror="this.src='https://via.placeholder.com/60'" alt="Mercado Pago Logo">
                 <div class="promotion-content">
                     <h4>Descarga la app de Mercado Pago</h4>
                     <p>Gana $100 m.n. para recargar el celular, pagar servicios y comprar en Mercado Libre con tu saldo disponible.</p>
@@ -274,7 +282,7 @@
                 </div>
             </div>
             <div class="promotion-item">
-                <img src="./logos/mercado-pago.png" alt="Mercado Pago Logo">
+                <img src="./logos/mercado-pago.png" onerror="this.src='https://via.placeholder.com/60'" alt="Mercado Pago Logo">
                 <div class="promotion-content">
                     <h4>Adquiere tu terminal point</h4>
                     <p>Hasta con 77% de descuento usando la siguiente invitación.</p>
@@ -291,7 +299,7 @@
             <div class="row mt-3">
                 <div class="col-md-4 mb-4">
                     <div class="card nu-card">
-                        <img src="nu.png" class="card-img-top" alt="Nu Logo">
+                        <img src="./logos/nu.png" onerror="this.src='https://via.placeholder.com/100'" class="card-img-top" alt="Nu Logo">
                         <div class="card-body">
                             <p class="card-text">¡Te invito a tener la Tarjeta de Crédito Nu con $0 anualidad y Cuenta Nu de Débito para que tu dinero crezca hasta 15.00% anual!</p>
                             <a href="https://link.nubank.com.br/e/CsEARCPiwUb" class="btn btn-primary">Activa tu cuenta aquí</a>
@@ -300,7 +308,7 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card didi-card">
-                        <img src="didi-card.png" class="card-img-top" alt="DiDi Card Logo">
+                        <img src="./logos/didi-card.png" onerror="this.src='https://via.placeholder.com/100'" class="card-img-top" alt="DiDi Card Logo">
                         <div class="card-body">
                             <p class="card-text">DiDi Card te da más por cada viaje. Tarjeta pensada para conductores y usuarios frecuentes.</p>
                             <a href="https://d.didiglobal.com/TR5NORW?r=&c=M2" class="btn btn-primary">Solicítala con mi invitación</a>
@@ -309,7 +317,7 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card didi-card">
-                        <img src="didi-prestamos.png" class="card-img-top" alt="DiDi Préstamos Logo">
+                        <img src="./logos/didi-prestamos.png" onerror="this.src='https://via.placeholder.com/100'" class="card-img-top" alt="DiDi Préstamos Logo">
                         <div class="card-body">
                             <p class="card-text">💰 ¿Necesitas un préstamo rápido y sin tanto trámite? Con DiDi Préstamos lo recibes directo a tu cuenta.</p>
                             <a href="https://d.didiglobal.com/DJfWsUk" class="btn btn-primary">Solicítalo aquí con mi invitación</a>
@@ -364,15 +372,15 @@
             { name: 'Clip', rate: 0.036 },
             { name: 'Uala Bis', rate: 0.032 },
             { name: 'Zettle', rate: 0.031 }
-        ];// Lista predeterminada por si el CSV falla
+        ];
 
         const logoUrls = {
             'Mercado Pago': './logos/mercado-pago.png',
             'Clip': './logos/clip.png',
             'Uala Bis': './logos/uala-bis.png',
             'Zettle': './logos/zettle.png'
+        };
 
-		// Intentar cargar datos desde el CSV de Google Sheets
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSO80a7kTMAV55psfXj8EYV_eta9hA0nqwbBev0tH7YZtmhtYT44LDXxMTNv3RMOX7Kv_bw1Z-tO8Tc/pub?gid=899706662&single=true&output=csv')
             .then(response => response.text())
             .then(csvText => {
@@ -424,6 +432,7 @@
                 resultsHtml += `
                     <div class="card result-item">
                         <div class="card-body d-flex align-items-center">
+                            <img src="${logoUrls[provider.name] || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'" class="terminal-logo" alt="${provider.name} logo">
                             <div class="result-details">
                                 <div class="commission">
                                     <strong>${provider.name} - Comisión:</strong><br>$${commission.toFixed(2)}
