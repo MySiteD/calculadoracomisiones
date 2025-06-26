@@ -11,26 +11,38 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Comisiones</title>
+    <title>Comisiones de Terminales de Venta en México</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome para íconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts (Poppins) -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
             font-family: 'Poppins', sans-serif;
             padding: 20px;
         }
         .calculator-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .description {
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
         }
         .result-item {
             margin-bottom: 15px;
@@ -39,12 +51,6 @@
         .result-item:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        .terminal-logo {
-            width: 80px;
-            height: 80px;
-            margin-right: 20px;
-            object-fit: contain;
         }
         .result-details {
             flex-grow: 1;
@@ -91,6 +97,8 @@
             height: 60px;
             margin-right: 15px;
             object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .promotion-content {
             flex-grow: 1;
@@ -104,7 +112,7 @@
             font-size: 0.9rem;
         }
         .promotion-button {
-            background-color: #FFD700; /* Amarillo llamativo de Mercado Pago */
+            background-color: #FFD700;
             color: #333;
             padding: 10px 20px;
             border: none;
@@ -117,7 +125,89 @@
             background-color: #FFC700;
             color: #333;
         }
-        /* Media query para pantallas móviles */
+        .otras-promociones-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6B00F5, #FF6200);
+            border-radius: 10px;
+            color: white;
+        }
+        .otras-promociones-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .otras-promociones-section .card {
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+        }
+        .otras-promociones-section .card:hover {
+            transform: translateY(-5px);
+        }
+        .otras-promociones-section .nu-card .btn {
+            background-color: #6B00F5;
+            border-color: #6B00F5;
+        }
+        .otras-promociones-section .didi-card .btn {
+            background-color: #FF6200;
+            border-color: #FF6200;
+        }
+        .card-img-top {
+            max-height: 100px;
+            object-fit: contain;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-section {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+        .btn-collapse {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #fff;
+        }
+        .btn-collapse:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+        .section-divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 2rem 0;
+        }
+        .donation-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .donation-section p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #666;
+        }
+        .donation-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .donation-button:hover {
+            background-color: #218838;
+        }
         @media (max-width: 768px) {
             .net-amount {
                 font-size: 1rem;
@@ -132,7 +222,7 @@
                 width: 100%;
                 text-align: left;
             }
-            .promotions-container h3 {
+            .promotions-container h3, .otras-promociones-section h2 {
                 font-size: 1.2rem;
             }
             .promotion-item {
@@ -146,12 +236,16 @@
                 width: 100%;
                 text-align: center;
             }
+            .otras-promociones-section .card {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="calculator-container">
-        <h1 class="text-center mb-4">Calculadora de Comisiones de Terminales de Venta</h1>
+        <h1 class="text-center">Comisiones de Terminales de Venta en México</h1>
+        <p class="description">Esta es una herramienta gratuita para conocer las comisiones que cobran cada una de las terminales de venta en México, espero sea de tu ayuda</p>
         <label for="amount" class="form-label">Ingresa la cantidad a cobrar</label>
         <div class="input-group mb-3">
             <span class="input-group-text">$</span>
@@ -159,6 +253,16 @@
             <button class="btn btn-success" onclick="calculate()">Calcular</button>
         </div>
         <div id="results" class="mt-4"></div>
+        <div id="ratesInfo" class="rates-info" style="display: none;"></div>
+
+        <!-- Enlace para calificar la página -->
+        <div class="text-center mt-4" id="ratingButton" style="display: none;">
+            <a href="https://forms.gle/jvpk9VXdUAJYooAw9" target="_blank" class="btn btn-primary">Califica esta herramienta</a>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- Promociones de Terminales de Venta (Mercado Pago) -->
         <div class="promotions-container">
             <h3>¡Aprovecha los beneficios de las siguientes promociones!</h3>
             <div class="promotion-item">
@@ -178,7 +282,77 @@
                 </div>
             </div>
         </div>
-        <div id="ratesInfo" class="rates-info" style="display: none;"></div>
+
+        <hr class="section-divider">
+
+        <!-- Otras Promociones (Nu, DiDi Card, DiDi Préstamos) -->
+        <div class="otras-promociones-section">
+            <h2>Otras Promociones</h2>
+            <div class="row mt-3">
+                <div class="col-md-4 mb-4">
+                    <div class="card nu-card">
+                        <img src="nu.png" class="card-img-top" alt="Nu Logo">
+                        <div class="card-body">
+                            <p class="card-text">¡Te invito a tener la Tarjeta de Crédito Nu con $0 anualidad y Cuenta Nu de Débito para que tu dinero crezca hasta 15.00% anual!</p>
+                            <a href="https://link.nubank.com.br/e/CsEARCPiwUb" class="btn btn-primary">Activa tu cuenta aquí</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card didi-card">
+                        <img src="didi-card.png" class="card-img-top" alt="DiDi Card Logo">
+                        <div class="card-body">
+                            <p class="card-text">DiDi Card te da más por cada viaje. Tarjeta pensada para conductores y usuarios frecuentes.</p>
+                            <a href="https://d.didiglobal.com/TR5NORW?r=&c=M2" class="btn btn-primary">Solicítala con mi invitación</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card didi-card">
+                        <img src="didi-prestamos.png" class="card-img-top" alt="DiDi Préstamos Logo">
+                        <div class="card-body">
+                            <p class="card-text">💰 ¿Necesitas un préstamo rápido y sin tanto trámite? Con DiDi Préstamos lo recibes directo a tu cuenta.</p>
+                            <a href="https://d.didiglobal.com/DJfWsUk" class="btn btn-primary">Solicítalo aquí con mi invitación</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- Sección de Feedback desplegable -->
+        <div class="feedback-section">
+            <h2 class="text-center">¿Tienes alguna sugerencia o comentario?</h2>
+            <div class="text-center mb-3">
+                <button class="btn btn-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#feedbackForm" aria-expanded="false" aria-controls="feedbackForm">
+                    Enviar un Comentario
+                </button>
+            </div>
+            <div class="collapse" id="feedbackForm">
+                <form action="mailto:cajadeherramientasymas@gmail.com" method="post" enctype="text/plain" class="mt-3">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo Electrónico:</label>
+                        <input type="email" class="form-control" id="correo" name="correo" placeholder="tu@correo.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="mensaje" class="form-label">Mensaje:</label>
+                        <textarea class="form-control" id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu comentario o sugerencia"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sección de donaciones -->
+        <div class="donation-section">
+            <p>Si esta herramienta te ha sido útil, considera apoyarme con una donación. ¡Gracias por tu apoyo!</p>
+            <a href="https://www.paypal.me/tu_usuario" target="_blank" class="donation-button">Donar</a>
+        </div>
     </div>
 
     <!-- Bootstrap JS y jQuery -->
@@ -190,16 +364,8 @@
             { name: 'Clip', rate: 0.036 },
             { name: 'Uala Bis', rate: 0.032 },
             { name: 'Zettle', rate: 0.031 }
-        ]; // Lista predeterminada por si el CSV falla
+        ];
 
-        const logoUrls = {
-            'Mercado Pago': './logos/mercado-pago.png',
-            'Clip': './logos/clip.png',
-            'Uala Bis': './logos/uala-bis.png',
-            'Zettle': './logos/zettle.png'
-        };
-
-        // Intentar cargar datos desde el CSV de Google Sheets
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSO80a7kTMAV55psfXj8EYV_eta9hA0nqwbBev0tH7YZtmhtYT44LDXxMTNv3RMOX7Kv_bw1Z-tO8Tc/pub?gid=899706662&single=true&output=csv')
             .then(response => response.text())
             .then(csvText => {
@@ -209,7 +375,7 @@
                     const parsedRate = parseFloat(rate.trim()) || 0;
                     return { name: terminal.trim(), rate: parsedRate };
                 }).filter(p => p.rate > 0);
-                if (newProviders.length > 0) providers = newProviders; // Actualizar solo si hay datos válidos
+                if (newProviders.length > 0) providers = newProviders;
                 updateRatesInfo();
             })
             .catch(error => {
@@ -233,15 +399,16 @@
             const amount = parseFloat(document.getElementById('amount').value);
             const resultsDiv = document.getElementById('results');
             const ratesInfo = document.getElementById('ratesInfo');
+            const ratingButton = document.getElementById('ratingButton');
 
             if (isNaN(amount) || amount <= 0) {
                 resultsDiv.innerHTML = '<div class="alert alert-danger">Por favor, ingresa un monto válido mayor a $0.</div>';
                 ratesInfo.style.display = 'none';
+                ratingButton.style.display = 'none';
                 return;
             }
 
             let resultsHtml = '<h2 class="text-center">Resultados:</h2>';
-            const resultsData = [];
             providers.forEach(provider => {
                 const commission = amount * provider.rate;
                 const iva = commission * 0.16;
@@ -250,10 +417,9 @@
                 resultsHtml += `
                     <div class="card result-item">
                         <div class="card-body d-flex align-items-center">
-                            <img src="${logoUrls[provider.name] || ''}" class="terminal-logo" alt="${provider.name} logo">
                             <div class="result-details">
                                 <div class="commission">
-                                    <strong>Comisión:</strong><br>$${commission.toFixed(2)}
+                                    <strong>${provider.name} - Comisión:</strong><br>$${commission.toFixed(2)}
                                 </div>
                                 <div class="iva">
                                     <strong>IVA:</strong><br>$${iva.toFixed(2)}
@@ -268,17 +434,11 @@
                         </div>
                     </div>
                 `;
-                resultsData.push({
-                    name: provider.name,
-                    commission: commission.toFixed(2),
-                    iva: iva.toFixed(2),
-                    total: totalCommission.toFixed(2),
-                    net: netAmount.toFixed(2)
-                });
             });
 
             resultsDiv.innerHTML = resultsHtml;
             ratesInfo.style.display = 'block';
+            ratingButton.style.display = 'block';
         }
     </script>
 </body>
