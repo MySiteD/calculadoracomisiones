@@ -364,8 +364,15 @@
             { name: 'Clip', rate: 0.036 },
             { name: 'Uala Bis', rate: 0.032 },
             { name: 'Zettle', rate: 0.031 }
-        ];
+        ];// Lista predeterminada por si el CSV falla
 
+        const logoUrls = {
+            'Mercado Pago': './logos/mercado-pago.png',
+            'Clip': './logos/clip.png',
+            'Uala Bis': './logos/uala-bis.png',
+            'Zettle': './logos/zettle.png'
+
+		// Intentar cargar datos desde el CSV de Google Sheets
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSO80a7kTMAV55psfXj8EYV_eta9hA0nqwbBev0tH7YZtmhtYT44LDXxMTNv3RMOX7Kv_bw1Z-tO8Tc/pub?gid=899706662&single=true&output=csv')
             .then(response => response.text())
             .then(csvText => {
