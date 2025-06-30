@@ -192,29 +192,58 @@
             margin: 2rem 0;
         }
         .donation-section {
+            max-width: 480px;
+            margin: 60px auto 30px;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            font-family: 'Segoe UI', sans-serif;
             text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-        .donation-section p {
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            color: #666;
-        }
-        .donation-button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .donation-button:hover {
-            background-color: #218838;
+            color: #333;
+          }
+        
+          .donation-section h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #222;
+          }
+        
+          .donation-section p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555;
+          }
+        
+          #floating-donate {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background-color: #fff;
+            padding: 10px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+          }
+        
+          #floating-donate:hover {
+            transform: scale(1.05);
+          }
+        
+          #floating-donate img {
+            height: 20px;
+          }
+        
+          #floating-donate span {
+            font-size: 14px;
+            color: #0070ba;
+            font-weight: 500;
         }
         @media (max-width: 768px) {
             .net-amount {
@@ -363,32 +392,34 @@
         </div>
 
         <!-- Sección de donaciones -->
-        <div class="donation-section">
-           <style="text-align:center; padding: 2rem;">
+               <div class="donation-section">
           <h2>¿Te fue útil esta herramienta?</h2>
-                  <p>Este proyecto es gratuito. Si deseas apoyar su desarrollo y mantenimiento para agregar muchas más inofrmación relevante, puedes hacer una donación voluntaria, te lo agradeceré de corazón. 🙏</p>
-                   <div id="donate-button-container">
-                <div id="donate-button"></div>
-                <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
-                <script>
-                PayPal.Donation.Button({
-                env:'production',
-                hosted_button_id:'92383VH3ZDLX8',
-                image: {
-                src:'https://www.paypalobjects.com/es_XC/MX/i/btn/btn_donateCC_LG.gif',
-                alt:'Donar con el botón PayPal',
-                title:'PayPal - The safer, easier way to pay online!',
-                }
-                }).render('#donate-button');
-                </script>
-                </div>
-               
-            <!-- BOTÓN FLOTANTE (derecha abajo) -->
-            <div id="floating-donate" onclick="document.getElementById('donate-button').scrollIntoView({ behavior: 'smooth' });">
-              <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal">
-              <span style="font-size: 14px; color: #0070ba;">Apóyanos</span>
-            </div>
-
+          <p>Este proyecto es gratuito. Si deseas apoyar su desarrollo y mantenimiento para agregar mucha más información relevante, puedes hacer una donación voluntaria. ¡Te lo agradeceré de corazón! 🙏</p>
+        
+          <div id="donate-button-container">
+            <div id="donate-button"></div>
+          </div>
+        </div>
+        
+        <!-- Botón flotante -->
+        <div id="floating-donate" onclick="document.getElementById('donate-button').scrollIntoView({ behavior: 'smooth' });">
+          <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal">
+          <span>Apóyanos</span>
+        </div>
+        
+        <!-- Script de PayPal -->
+        <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+        <script>
+          PayPal.Donation.Button({
+            env: 'production',
+            hosted_button_id: '92383VH3ZDLX8',
+            image: {
+              src: 'https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif',
+              alt: 'Donar con el botón PayPal',
+              title: 'PayPal - Donación segura'
+            }
+          }).render('#donate-button');
+        </script>
 
     <!-- Bootstrap JS y jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
