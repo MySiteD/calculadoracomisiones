@@ -342,11 +342,28 @@
            <style="text-align:center; padding: 2rem;">
   <h2>¿Te fue útil esta herramienta?</h2>
   <p>Este proyecto es gratuito. Si deseas apoyar su desarrollo y mantenimiento para agregar muchas más inofrmación relevante, puedes hacer una donación voluntaria, te lo agradeceré de corazón. 🙏</p>
-   <form action="https://www.paypal.com/donate" method="post" target="_top">
-<input type="hidden" name="hosted_button_id" value="92383VH3ZDLX8" />
-<input type="image" src="https://www.paypalobjects.com/es_XC/MX/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donar con el botón PayPal" />
-<img alt="" border="0" src="https://www.paypal.com/es_MX/i/scr/pixel.gif" width="1" height="1" />
-</form>
+   <div id="donate-button-container">
+<div id="donate-button"></div>
+<script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+<script>
+PayPal.Donation.Button({
+env:'production',
+hosted_button_id:'92383VH3ZDLX8',
+image: {
+src:'https://www.paypalobjects.com/es_XC/MX/i/btn/btn_donateCC_LG.gif',
+alt:'Donar con el botón PayPal',
+title:'PayPal - The safer, easier way to pay online!',
+}
+}).render('#donate-button');
+</script>
+</div>
+               
+<!-- BOTÓN FLOTANTE (derecha abajo) -->
+<div id="floating-donate" onclick="document.getElementById('donate-button').scrollIntoView({ behavior: 'smooth' });">
+  <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal">
+  <span style="font-size: 14px; color: #0070ba;">Apóyanos</span>
+</div>
+
 
     <!-- Bootstrap JS y jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
