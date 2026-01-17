@@ -1,519 +1,114 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPBVHHR5CC"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YPBVHHR5CC');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comisiones de Terminales de Venta en México</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts (Poppins) -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-            font-family: 'Poppins', sans-serif;
-            padding: 20px;
-        }
-        .calculator-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            color: #333;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .description {
-            font-size: 1rem;
-            color: #666;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .result-item {
-            margin-bottom: 15px;
-            transition: transform 0.2s;
-        }
-        .result-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        .terminal-logo {
-            width: 80px;
-            height: 80px;
-            margin-right: 20px;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .result-details {
-            flex-grow: 1;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-        .net-amount {
-            font-size: 1.5rem;
-            text-align: center;
-            width: 150px;
-        }
-        .commission, .iva, .total { color: #4682B4; text-align: center; }
-        .net { color: #28a745; font-weight: bold; }
-        .rates-info {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #666;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-        .promotions-container {
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #4682B4, #28a745);
-            border-radius: 10px;
-            color: white;
-        }
-        .promotions-container h3 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        .promotion-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-        }
-        .promotion-item img {
-            width: 60px;
-            height: 60px;
-            margin-right: 15px;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .promotion-content {
-            flex-grow: 1;
-        }
-        .promotion-content h4 {
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-        .promotion-content p {
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-        .promotion-button {
-            background-color: #FFD700;
-            color: #333;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .promotion-button:hover {
-            background-color: #FFC700;
-            color: #333;
-        }
-        .otras-promociones-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #6B00F5, #FF6200);
-            border-radius: 10px;
-            color: white;
-        }
-        .otras-promociones-section h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-        .otras-promociones-section .card {
-            border: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #333;
-        }
-        .otras-promociones-section .card:hover {
-            transform: translateY(-5px);
-        }
-        .otras-promociones-section .nu-card .btn {
-            background-color: #6B00F5;
-            border-color: #6B00F5;
-        }
-        .otras-promociones-section .didi-card .btn {
-            background-color: #FF6200;
-            border-color: #FF6200;
-        }
-        .card-img-top {
-            max-height: 100px;
-            object-fit: contain;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .feedback-section {
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-        }
-        .btn-collapse {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: #fff;
-        }
-        .btn-collapse:hover {
-            background-color: #5a6268;
-            border-color: #5a6268;
-        }
-        .section-divider {
-            border-top: 1px solid #e0e0e0;
-            margin: 2rem 0;
-        }
-        .donation-section {
-            max-width: 480px;
-            margin: 60px auto 30px;
-            padding: 24px;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            font-family: 'Segoe UI', sans-serif;
-            text-align: center;
-            color: #333;
-          }
-        
-          .donation-section h2 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: #222;
-          }
-        
-          .donation-section p {
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #555;
-          }
-        
-          #floating-donate {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            background-color: #fff;
-            padding: 10px 16px;
-            border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-          }
-        
-          #floating-donate:hover {
-            transform: scale(1.05);
-          }
-        
-          #floating-donate img {
-            height: 20px;
-          }
-        
-          #floating-donate span {
-            font-size: 14px;
-            color: #0070ba;
-            font-weight: 500;
-        }
-        @media (max-width: 768px) {
-            .net-amount {
-                font-size: 1rem;
-                width: 100px;
-            }
-            .result-details {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .commission, .iva, .total {
-                margin-bottom: 5px;
-                width: 100%;
-                text-align: left;
-            }
-            .promotions-container h3, .otras-promociones-section h2 {
-                font-size: 1.2rem;
-            }
-            .promotion-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .promotion-item img {
-                margin-bottom: 10px;
-            }
-            .promotion-button {
-                width: 100%;
-                text-align: center;
-            }
-            .otras-promociones-section .card {
-                margin-bottom: 20px;
-            }
-             /* Donación flotante */
-              #floating-donate {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 1000;
-                background: #fff;
-                padding: 10px 14px;
-                border-radius: 50px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                font-family: 'Segoe UI', sans-serif;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                transition: transform 0.2s ease;
-  }
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPBVHHR5CC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YPBVHHR5CC');
+  </script>
 
-              #floating-donate:hover {
-                transform: scale(1.05);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparador de Comisiones de Terminales</title>
 
-              #floating-donate img {
-                height: 20px;
-  }
-        }
-        
-    </style>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- CSS propio -->
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <div class="calculator-container">
-        <h1 class="text-center">Comisiones de Terminales de Venta</h1>
-        <p class="description">Esta es una herramienta gratuita para conocer las comisiones que cobran cada una de las terminales de venta en México, espero sea de tu ayuda.</p>
-        <label for="amount" class="form-label">Ingresa la cantidad a cobrar</label>
-        <div class="input-group mb-3">
-            <span class="input-group-text">$</span>
-            <input type="number" id="amount" class="form-control" placeholder="Ej: 1000" min="1">
-            <button class="btn btn-success" onclick="calculate()">Calcular</button>
-        </div>
-        <div id="results" class="mt-4"></div>
-        <div id="ratesInfo" class="rates-info" style="display: none;"></div>
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-glass">
+  <div class="container-fluid">
 
-        <!-- Enlace para calificar la página -->
-        <div class="text-center mt-4" id="ratingButton" style="display: none;">
-            <a href="https://forms.gle/z5cQZwK6Wj3sZoLM7" target="_blank" class="btn btn-primary">Califica esta herramienta</a>
-        </div>
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#" id="scrollTop">
+      <img src="./logos/canal-logo.jpg" height="36" alt="Caja de Herramientas y más">
+      <strong>Caja de Herramientas y más</strong>
+    </a>
 
-        <hr class="section-divider">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <!-- Promociones de Terminales de Venta (Mercado Pago) -->
-        <div class="promotions-container">
-            <h3>¡Aprovecha los beneficios de las siguientes promociones!</h3>
-            <div class="promotion-item">
-                <img src="./logos/mercado-pago.png" onerror="this.src='https://via.placeholder.com/60'" alt="Mercado Pago Logo">
-                <div class="promotion-content">
-                    <h4>Descarga la app de Mercado Pago</h4>
-                    <p>Gana $100 m.n. para recargar el celular, pagar servicios y comprar en Mercado Libre con tu saldo disponible.</p>
-                    <a href="https://mpago.li/2yxLMmc" target="_blank" class="promotion-button">Usar Promoción</a>
-                </div>
-            </div>
-            <div class="promotion-item">
-                <img src="./logos/mercado-pago.png" onerror="this.src='https://via.placeholder.com/60'" alt="Mercado Pago Logo">
-                <div class="promotion-content">
-                    <h4>Adquiere tu terminal point</h4>
-                    <p>Hasta con 77% de descuento usando la siguiente invitación.</p>
-                    <a href="https://mpago.li/1iXHin1" target="_blank" class="promotion-button">Usar Promoción</a>
-                </div>
-            </div>
-        </div>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="comisiones.html">Comisiones</a></li>
+        <li class="nav-item"><a class="nav-link" href="promociones.html">Promociones</a></li>
+        <li class="nav-item"><a class="nav-link" href="referidos.html">Referidos</a></li>
+      </ul>
+    </div>
 
-        <hr class="section-divider">
+  </div>
+</nav>
 
-        <!-- Otras Promociones (Nu, DiDi Card, DiDi Préstamos) -->
-        <div class="otras-promociones-section">
-            <h2>Otras Promociones</h2>
-            <div class="row mt-3">
-                <div class="col-md-4 mb-4">
-                    <div class="card nu-card">
-                        <img src="./logos/nu.png" onerror="this.src='https://via.placeholder.com/100'" class="card-img-top" alt="Nu Logo">
-                        <div class="card-body">
-                            <p class="card-text">¡Te invito a tener la Tarjeta de Crédito Nu con $0 anualidad y Cuenta Nu de Débito para que tu dinero crezca hasta 15.00% anual!</p>
-                            <a href="https://link.nubank.com.br/e/CsEARCPiwUb" class="btn btn-primary">Activa tu cuenta aquí</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card didi-card">
-                        <img src="./logos/didi.png" onerror="this.src='https://via.placeholder.com/100'" class="card-img-top" alt="DiDi Card Logo">
-                        <div class="card-body">
-                            <p class="card-text">DiDi Card te da más por cada viaje. Tarjeta pensada para conductores y usuarios frecuentes.</p>
-                            <a href="https://d.didiglobal.com/6Yx4rh8?r=27&c=M2" class="btn btn-primary">Solicítala con mi invitación</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card didi-card">
-                        <img src="./logos/didi.png" onerror="this.src='https://via.placeholder.com/100'" class="card-img-top" alt="DiDi Préstamos Logo">
-                        <div class="card-body">
-                            <p class="card-text">💰 ¿Necesitas un préstamo rápido y sin tanto trámite? Con DiDi Préstamos lo recibes directo a tu cuenta.</p>
-                            <a href="https://d.didiglobal.com/iEtABqv" class="btn btn-primary">Solicítalo aquí con mi invitación</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <hr class="section-divider">
 
-        <!-- Sección de Feedback -->
-        <div class="feedback-section">
-            <h2 class="text-center">¿Tienes alguna sugerencia o comentario?</h2>
-            <div class="text-center mb-3">
-                <a href="https://forms.gle/dVfL6G6q9bBWeEZv7" target="_blank" class="btn btn-collapse">Enviar un Comentario</a>
-            </div>
-        </div>
+<div class="calculator-container">
 
-        <!-- Sección de donaciones -->
-               <div class="donation-section">
-          <h2>¿Te fue útil esta herramienta?</h2>
-          <p>Este proyecto es gratuito. Si deseas apoyar su desarrollo y mantenimiento para agregar mucha más información relevante, puedes hacer una donación voluntaria. ¡Te lo agradeceré de corazón! 🙏</p>
-        
-          <div id="donate-button-container">
-            <div id="donate-button"></div>
-          </div>
-        </div>
-        
-        <!-- Botón flotante -->
-        <div id="floating-donate" onclick="document.getElementById('donate-button').scrollIntoView({ behavior: 'smooth' });">
-          <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal">
-          <span>Apóyanos</span>
-        </div>
-        
-        <!-- Script de PayPal -->
-        <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
-        <script>
-          PayPal.Donation.Button({
-            env: 'production',
-            hosted_button_id: '92383VH3ZDLX8',
-            image: {
-              src: 'https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif',
-              alt: 'Donar con el botón PayPal',
-              title: 'PayPal - Donación segura'
-            }
-          }).render('#donate-button');
-        </script>
+  <!-- HERO -->
+  <div class="hero fade-in">
+    <span class="hero-badge">Gratis · Sin registro</span>
+    <h1>¿Qué terminal te deja más dinero?</h1>
+    <p>
+      Compara comisiones reales + IVA y descubre
+      <strong>cuál te conviene más por cada venta</strong>.
+    </p>
+    <button class="btn btn-success btn-lg hero-btn"
+      onclick="document.getElementById('amount').focus()">
+      Calcular ahora
+    </button>
+  </div>
 
-    <!-- Bootstrap JS y jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        let providers = [
-            { name: 'Mercado Pago', rate: 0.035 },
-            { name: 'Clip', rate: 0.036 },
-            { name: 'Uala Bis', rate: 0.032 },
-            { name: 'Zettle', rate: 0.031 }
-        ];
+  <!-- INPUT -->
+  <label class="form-label">Ingresa la cantidad a cobrar</label>
+  <div class="input-group mb-4">
+    <span class="input-group-text">$</span>
+    <input type="number" id="amount" class="form-control" placeholder="Ej. 1,000" min="1">
+    <button class="btn btn-success" onclick="calculate()">Calcular</button>
+  </div>
 
-        const logoUrls = {
-            'Mercado Pago': './logos/mercado-pago.png',
-            'Clip': './logos/clip.png',
-            'Uala Bis': './logos/uala-bis.png',
-            'Zettle': './logos/zettle.png'
-        };
+  <!-- RESUMEN -->
+  <div id="summary"></div>
 
-        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSO80a7kTMAV55psfXj8EYV_eta9hA0nqwbBev0tH7YZtmhtYT44LDXxMTNv3RMOX7Kv_bw1Z-tO8Tc/pub?gid=899706662&single=true&output=csv')
-            .then(response => response.text())
-            .then(csvText => {
-                const rows = csvText.split('\n').slice(1);
-                const newProviders = rows.map(row => {
-                    const [terminal, rate] = row.split(',');
-                    const parsedRate = parseFloat(rate.trim()) || 0;
-                    return { name: terminal.trim(), rate: parsedRate };
-                }).filter(p => p.rate > 0);
-                if (newProviders.length > 0) providers = newProviders;
-                updateRatesInfo();
-            })
-            .catch(error => {
-                console.error('Error al cargar el CSV, usando valores predeterminados:', error);
-                updateRatesInfo();
-            });
+  <!-- RESULTADOS -->
+  <div id="results"></div>
 
-        function updateRatesInfo() {
-            const ratesInfo = document.getElementById('ratesInfo');
-            let ratesHtml = '<p><strong>Porcentajes de comisión:</strong></p>';
-            providers.forEach(provider => {
-                const percentage = (provider.rate * 100).toFixed(2);
-                ratesHtml += `<p>- ${provider.name}: ${percentage}%</p>`;
-            });
-            const lastUpdated = new Date().toLocaleString('es-MX', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-            ratesHtml += `<p><small>Última actualización: ${lastUpdated}</small></p>`;
-            ratesInfo.innerHTML = ratesHtml;
-        }
+</div>
 
-        function calculate() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            const resultsDiv = document.getElementById('results');
-            const ratesInfo = document.getElementById('ratesInfo');
-            const ratingButton = document.getElementById('ratingButton');
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-            if (isNaN(amount) || amount <= 0) {
-                resultsDiv.innerHTML = '<div class="alert alert-danger">Por favor, ingresa un monto válido mayor a $0.</div>';
-                ratesInfo.style.display = 'none';
-                ratingButton.style.display = 'none';
-                return;
-            }
+<!-- JS propio -->
+<script src="js/main.js"></script>
 
-            let resultsHtml = '<h2 class="text-center">Resultados:</h2>';
-            providers.forEach(provider => {
-                const commission = amount * provider.rate;
-                const iva = commission * 0.16;
-                const totalCommission = commission + iva;
-                const netAmount = amount - totalCommission;
-                resultsHtml += `
-                    <div class="card result-item">
-                        <div class="card-body d-flex align-items-center">
-                            <img src="${logoUrls[provider.name] || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'" class="terminal-logo" alt="${provider.name} logo">
-                            <div class="result-details">
-                                <div class="commission">
-                                    <strong>${provider.name} - Comisión:</strong><br>$${commission.toFixed(2)}
-                                </div>
-                                <div class="iva">
-                                    <strong>IVA:</strong><br>$${iva.toFixed(2)}
-                                </div>
-                                <div class="total">
-                                    <strong>Comisión total:</strong><br>$${totalCommission.toFixed(2)}
-                                </div>
-                            </div>
-                            <div class="net-amount net">
-                                <strong>Monto neto:</strong><br>$${netAmount.toFixed(2)}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+<footer class="site-footer">
+  <div class="footer-content">
+    <p><strong>Caja de Herramientas y más</strong></p>
+    <p class="footer-text">
+      Herramientas gratuitas para tomar mejores decisiones financieras.
+    </p>
 
-            resultsDiv.innerHTML = resultsHtml;
-            ratesInfo.style.display = 'block';
-            ratingButton.style.display = 'block';
-        }
-    </script>
+    <div class="footer-links">
+      <a href="http://www.youtube.com/@cajadeherramientasymas" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" height="18">
+        YouTube
+      </a>
+    </div>
+
+    <p class="footer-copy">
+      © 2026 — Proyecto independiente. Información referencial.
+    </p>
+  </div>
+</footer>
+
 </body>
+
 </html>
