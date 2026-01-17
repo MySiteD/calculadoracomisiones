@@ -155,7 +155,7 @@ body {
 
   .result-content {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .result-net {
