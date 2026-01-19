@@ -21,8 +21,8 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-glass">
   <div class="container-fluid">
 
-    <a class="navbar-brand d-flex align-items-center gap-2" href="#" id="scrollTop">
-      <img src="./logos/canal-logo.jpg" height="36" alt="Caja de Herramientas y más">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <img src="./logos/canal-logo.jpg" class="navbar-logo" alt="Caja de Herramientas y más">
       <strong>Caja de Herramientas y más</strong>
     </a>
 
@@ -33,7 +33,7 @@
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="comisiones.html">Comisiones</a></li>
+        <li class="nav-item"><a class="nav-link active" href="comisiones.html">Comisiones</a></li>
         <li class="nav-item"><a class="nav-link" href="promociones.html">Promociones</a></li>
         <li class="nav-item"><a class="nav-link" href="referidos.html">Referidos</a></li>
       </ul>
@@ -45,41 +45,97 @@
 <!-- CONTENIDO -->
 <div class="calculator-container">
 
-  <!-- INTRO -->
+  <!-- HERO -->
   <div class="hero">
-    <span class="hero-badge">Información general</span>
+    <span class="hero-badge">Guía sencilla</span>
     <h1>Comisiones de terminales</h1>
     <p>
-      Cada terminal cobra una comisión por operación y posteriormente
-      se aplica el IVA correspondiente.
-      Aquí te mostramos <strong>cómo se calcula</strong> y
-      <strong>qué opciones existen</strong> de forma sencilla.
+      Antes de comparar terminales, es importante
+      <strong>entender cómo se calcula una comisión</strong>.
+      Aquí te lo explicamos de forma clara y sin letras pequeñas.
     </p>
   </div>
 
-  <!-- EJEMPLO -->
-  <div class="alert alert-secondary mb-5">
-    <strong>Ejemplo de cálculo:</strong><br>
-    Venta de $1,000<br>
-    Comisión 3.5% → $35.00<br>
-    IVA (16%) de la comisión → $5.60<br>
-    <strong>Total comisión:</strong> $40.60
+  <!-- COMO SE CALCULA -->
+  <div class="card mb-5">
+    <div class="card-body">
+
+      <h4 class="mb-3">¿Cómo se calcula una comisión?</h4>
+      <p class="text-muted">
+        En un cobro con terminal intervienen <strong>dos conceptos</strong>:
+      </p>
+
+      <div class="row g-4 mt-4 text-center">
+
+        <div class="col-md-6">
+          <div class="p-4 border rounded h-100">
+            <h5>1️⃣ Comisión del proveedor</h5>
+            <p class="small text-muted">
+              Es el porcentaje que cobra la empresa
+              por procesar el pago.
+            </p>
+            <span class="badge bg-success">Ejemplo: 3.5%</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="p-4 border rounded h-100">
+            <h5>2️⃣ IVA sobre la comisión</h5>
+            <p class="small text-muted">
+              El IVA <strong>NO se aplica a la venta</strong>,
+              solo a la comisión.
+            </p>
+            <span class="badge bg-secondary">IVA: 16%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <hr>
+
+      <div class="alert alert-success mt-4">
+        <strong>Ejemplo práctico:</strong><br>
+        Venta de $1,000<br>
+        Comisión 3.5% → $35.00<br>
+        IVA (16%) → $5.60<br>
+        <strong>Total comisión:</strong> $40.60
+      </div>
+
+    </div>
   </div>
+
+  <!-- AVISO NO BANCARIAS -->
+  <div class="alert alert-warning mb-5">
+    ⚠️ <strong>Importante:</strong>  
+    Las terminales mostradas en esta página <strong>NO son bancarias</strong>.
+    Son soluciones de pago independientes.
+    <br><br>
+    Próximamente agregaremos una sección exclusiva
+    para <strong>terminales bancarias</strong>.
+    Actualmente se encuentra en construcción 🚧
+  </div>
+
+  <!-- ===== PROVEEDORES ===== -->
 
   <!-- MERCADO PAGO -->
   <div class="card mb-5">
     <div class="card-body">
 
-      	  <img src="./logos/mercado-pago.png" class="img-fluid mb-3" style="max-height:100px;">
-      <p>
-        Mercado Pago ofrece distintas terminales Point, pensadas para
-        diferentes tipos de negocio.
-        Las comisiones pueden variar según los plazos de pago y promociones vigentes.
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <img src="./logos/mercado-pago.png" style="max-height:60px;">
+        <h4 class="mb-0">Mercado Pago</h4>
+      </div>
+
+      <p class="text-muted">
+        Ofrece distintas terminales Point pensadas
+        para diferentes tipos de negocio.
       </p>
-	  
-	  <p class="small text-muted">
-        Sin comisiones mensuales; comisión por transacción de <strong>3.5% + IVA</strong><br>.
-      </p>
+
+      <div class="alert alert-light small">
+        Comisión por transacción:
+        <strong>3.5% + IVA</strong><br>
+        Sin rentas ni comisiones mensuales
+      </div>
 
       <div class="row g-4 mt-3">
 
@@ -89,8 +145,8 @@
               <img src="./logos/point-air.png" class="img-fluid mb-3" style="max-height:120px;">
               <h5>Point Air</h5>
               <p class="small text-muted">
-                Terminal con chip 4G gratis y WIFI,
-                ideal para mostrador y movilidad ligera.
+                Terminal con chip 4G y WiFi,
+                ideal para movilidad ligera.
               </p>
             </div>
           </div>
@@ -102,7 +158,8 @@
               <img src="./logos/point-smart.png" class="img-fluid mb-3" style="max-height:120px;">
               <h5>Point Smart 2</h5>
               <p class="small text-muted">
-                Terminal con plan de datos integrado y WIFI, recibos impresos y rollos de papel gratis.
+                Terminal con impresora integrada
+                y plan de datos incluido.
               </p>
             </div>
           </div>
@@ -111,7 +168,7 @@
       </div>
 
       <div class="text-end mt-4">
-        <a href="https://www.mercadopago.com.mx/herramientas-para-vender/lectores-point?code=POINT_ORG_DEFAULT" target="_blank"
+        <a href="https://www.mercadopago.com.mx/herramientas-para-vender/lectores-point" target="_blank"
            class="btn btn-outline-success">
           Más información
         </a>
@@ -124,19 +181,24 @@
   <div class="card mb-5">
     <div class="card-body">
 
-      	  <img src="./logos/zettle.png" class="img-fluid mb-3" style="max-height:100px;">
-      <p>
-        Zettle ofrece PayPal Reader, con una estructura de comisiones sencilla,
-        con integración directa a PayPal y depósitos rápidos.
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <img src="./logos/zettle.png" style="max-height:60px;">
+        <h4 class="mb-0">Zettle</h4>
+      </div>
+
+      <p class="text-muted">
+        Terminal PayPal Reader con estructura
+        de comisiones simple y depósitos rápidos.
       </p>
+
+      <div class="alert alert-light small">
+        Comisión por transacción:
+        <strong>3.5% + IVA</strong>
+      </div>
 
       <div class="text-center my-4">
         <img src="./logos/zettle.webp" class="img-fluid" style="max-height:120px;">
       </div>
-
-      <p class="small text-muted">
-        Sin comisiones mensuales; comisión por transacción de <strong>3.5% + IVA</strong><br>.
-      </p>
 
       <div class="text-end">
         <a href="https://www.zettle.com/mx/lector-de-tarjetas" target="_blank"
@@ -148,19 +210,24 @@
     </div>
   </div>
 
-<!-- Uala bis -->
+  <!-- UALÁ BIS -->
   <div class="card mb-5">
     <div class="card-body">
 
-      	  <img src="./logos/uala-bis.png" class="img-fluid mb-3" style="max-height:100px;">
-      <p>
-        Ualá Bis ofrece terminales con enfoque digital,
-        pensadas para emprendedores y pequeños negocios.
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <img src="./logos/uala-bis.png" style="max-height:60px;">
+        <h4 class="mb-0">Ualá Bis</h4>
+      </div>
+
+      <p class="text-muted">
+        Soluciones digitales pensadas
+        para emprendedores y pequeños negocios.
       </p>
-	  
-	  <p class="small text-muted">
-        Sin comisiones mensuales; comisión por transacción de <strong>2.9% + IVA</strong><br>.
-      </p>
+
+      <div class="alert alert-light small">
+        Comisión por transacción:
+        <strong>2.9% + IVA</strong>
+      </div>
 
       <div class="row g-4 mt-3">
 
@@ -169,10 +236,6 @@
             <div class="card-body">
               <img src="./logos/pos-mini.jpg" class="img-fluid mb-3" style="max-height:120px;">
               <h5>Pos Mini</h5>
-              <p class="small text-muted">
-                Terminal con chip 4G gratis y WIFI,
-                ideal para mostrador y movilidad ligera.
-              </p>
             </div>
           </div>
         </div>
@@ -182,78 +245,86 @@
             <div class="card-body">
               <img src="./logos/pos-pro.png" class="img-fluid mb-3" style="max-height:120px;">
               <h5>Pos Pro</h5>
-              <p class="small text-muted">
-                Terminal con plan de datos integrado y WIFI, recibos impresos y rollos de papel gratis.
-              </p>
             </div>
           </div>
         </div>
+		
+				<div class="text-end mt-4">
+		  <a href="https://www.ualabis.com.mx/lector" target="_blank"
+			 class="btn btn-outline-success">
+			Más información
+		  </a>
+		</div>
 
-      </div>
-
-      <div class="text-end mt-4">
-        <a href="https://www.mercadopago.com.mx/herramientas-para-vender/lectores-point?code=POINT_ORG_DEFAULT" target="_blank"
-           class="btn btn-outline-success">
-          Más información
-        </a>
-      </div>
-
-    </div>
-  </div>
-  
-  <!-- Clip -->
-  <div class="card mb-5">
-    <div class="card-body">
-
-	  <img src="./logos/clip.png" class="img-fluid mb-3" style="max-height:100px;">
-      <p>
-        Clip ofrece distintas terminales que se adaptan a tu negocio.
-      </p>
-	  
-	  <p class="small text-muted">
-        Sin comisiones mensuales; comisión por transacción de <strong>3.6% + IVA</strong><br>.
-      </p>
-
-      <div class="row g-4 mt-3">
-
-        <div class="col-md-6">
-          <div class="card h-100 text-center">
-            <div class="card-body">
-              <img src="./logos/clip-ultra.webp" class="img-fluid mb-3" style="max-height:120px;">
-              <h5>Clip Ultra</h5>
-              <p class="small text-muted">
-                Terminal punto de venta con impresora integrada y teclado físico retroiluminado.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="card h-100 text-center">
-            <div class="card-body">
-              <img src="./logos/clip-total.webp" class="img-fluid mb-3" style="max-height:120px;">
-              <h5>Clip Total 2</h5>
-              <p class="small text-muted">
-                Poderoso y completo en el control de inventario, movilidad y cobros eficientes para tu gran volumen de ventas. 
-              </p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="text-end mt-4">
-        <a href="https://shop.clip.mx/collections/productos-clip" target="_blank"
-           class="btn btn-outline-success">
-          Más información
-        </a>
       </div>
 
     </div>
   </div>
 
+<!-- CLIP -->
+<div class="card mb-5">
+  <div class="card-body">
+
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <img src="./logos/clip.png" style="max-height:60px;">
+      <h4 class="mb-0">Clip</h4>
+    </div>
+
+    <p class="text-muted">
+      Clip ofrece terminales diseñadas para negocios
+      que requieren rapidez, estabilidad y opciones
+      avanzadas de cobro.
+    </p>
+
+    <div class="alert alert-light small">
+      Comisión por transacción:
+      <strong>3.6% + IVA</strong><br>
+      Sin rentas ni comisiones mensuales
+    </div>
+
+    <div class="row g-4 mt-3">
+
+      <div class="col-md-6">
+        <div class="card h-100 text-center">
+          <div class="card-body">
+            <img src="./logos/clip-ultra.webp" class="img-fluid mb-3" style="max-height:120px;">
+            <h5>Clip Ultra</h5>
+            <p class="small text-muted">
+              Terminal con impresora integrada
+              y teclado físico.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card h-100 text-center">
+          <div class="card-body">
+            <img src="./logos/clip-total.webp" class="img-fluid mb-3" style="max-height:120px;">
+            <h5>Clip Total 2</h5>
+            <p class="small text-muted">
+              Solución completa para alto volumen
+              de ventas y control del negocio.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-end mt-4">
+      <a href="https://shop.clip.mx/collections/productos-clip"
+         target="_blank"
+         class="btn btn-outline-success">
+        Más información
+      </a>
+    </div>
+
+  </div>
 </div>
 
+
+</div>
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -263,9 +334,28 @@
       Información referencial. Las comisiones pueden cambiar sin previo aviso.
     </p>
   </div>
+  <div class="footer-links">
+			<a href="http://www.youtube.com/@cajadeherramientasymas" target="_blank">
+			<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" height="18">
+						YouTube
+			</a>
+
+			<a href="https://www.tiktok.com/@cajadeherramientasymas" target="_blank">
+			<img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" height="18">
+						TikTok
+			</a>
+
+		<a href="mailto:cajadeherramientasymas@gmail.com">
+			<img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" height="18">
+						Contacto
+		</a>
+	</div>
+
+	<p class="footer-copy">
+  🇲🇽 Hecho en México · © 2026 — Proyecto independiente
+	</p>
 </footer>
 
-<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

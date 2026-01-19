@@ -12,7 +12,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comparador de Comisiones de Terminales</title>
+  <title>Terminales y Comisiones en México</title>
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,15 +22,19 @@
 
   <!-- CSS propio -->
   <link rel="stylesheet" href="css/styles.css">
+  
+  <!--BOOTSTRAP ICONS-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-glass">
   <div class="container-fluid">
 
-    <a class="navbar-brand d-flex align-items-center gap-2" href="#" id="scrollTop">
-      <img src="./logos/canal-logo.jpg" height="36" alt="Caja de Herramientas y más">
-      <strong>Caja de Herramientas y más</strong>
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html" id="scrollTop">
+      <img src="./logos/canal-logo.jpg" class="navbar-logo" alt="Caja de Herramientas y más">
+      <strong>Caja de Herramientas y Más</strong>
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
@@ -56,20 +60,96 @@
   <!-- HERO -->
   <div class="hero fade-in">
     <span class="hero-badge">Gratis · Sin registro</span>
-    <h1>¿Qué terminal te deja más dinero?</h1>
-    <p>
-      Compara comisiones reales + IVA y descubre
-      <strong>cuál te conviene más por cada venta</strong>.
-    </p>
+		<h1>¿Qué terminal te deja más dinero en México?</h1>
+		<p> Compara comisiones reales <strong>en México</strong> + IVA
+            y descubre cuál terminal te conviene más
+           <strong>por cada venta que realizas</strong>.
+        </p>
     <button class="btn btn-success btn-lg hero-btn"
       onclick="document.getElementById('amount').focus()">
       Calcular ahora
     </button>
   </div>
+  
+			<div class="row g-4 mb-5">
+
+		  <!-- CÁLCULOS -->
+		  <div class="col-md-4">
+			<div class="stat-card stat-green">
+			  <div class="stat-icon">
+				<i class="bi bi-calculator"></i>
+			  </div>
+			  <div class="stat-info">
+				<h6>Cálculos realizados</h6>
+				<span id="calcCount">0</span>
+			  </div>
+			</div>
+		  </div>
+
+		  <!-- PROVEEDORES -->
+		  <div class="col-md-4">
+			<div class="stat-card stat-blue">
+			  <div class="stat-icon">
+				<i class="bi bi-shop"></i>
+			  </div>
+			  <div class="stat-info">
+				<h6>Proveedores analizados</h6>
+				<span id="providerCount">0</span>
+			  </div>
+			</div>
+		  </div>
+
+		  <!-- CALIFICACIÓN -->
+		  <div class="col-md-4">
+			<div class="stat-card stat-yellow">
+			  <div class="stat-icon">
+				<i class="bi bi-star-fill"></i>
+			  </div><p class="mb-3">
+				Calificación promedio: <strong>4.9 / 5</strong>
+					</p>
+			  		⭐⭐⭐⭐⭐
+				</div>
+
+			
+			  </div>
+			
+		  
+
+		</div>
+		
+		<!-- PROVEEDORES -->
+	<section class="providers-section text-center my-5">
+
+	  <h5 class="text-muted mb-4">
+		Terminales y proveedores analizados
+	  </h5>
+
+	  <div id="providersCarousel"
+		   class="carousel slide"
+		   data-bs-ride="carousel"
+		   data-bs-interval="2500">
+
+		<div class="carousel-inner">
+
+		  <div class="carousel-item active">
+			<div class="d-flex justify-content-center gap-5 flex-wrap">
+			  <img src="./logos/mercado-pago.png" class="provider-logo">
+			  <img src="./logos/clip.png" class="provider-logo">
+			  <img src="./logos/uala-bis.png" class="provider-logo">
+			  <img src="./logos/zettle.png" class="provider-logo">
+			</div>
+		  </div>
+
+		</div>
+
+	  </div>
+
+	</section>
+
 
   <!-- INPUT -->
   <label class="form-label">Ingresa la cantidad a cobrar</label>
-  <div class="input-group mb-4">
+  <div class="input-group mb-5">
     <span class="input-group-text">$</span>
     <input type="number" id="amount" class="form-control" placeholder="Ej. 1,000" min="1">
     <button class="btn btn-success" onclick="calculate()">Calcular</button>
@@ -79,12 +159,65 @@
   <div id="summary"></div>
 
   <!-- RESULTADOS -->
+  <hr class="my-5">
   <div id="results"></div>
+  
+  <!-- COMPARTIR -->
+  <div id="shareTool" class="text-center mt-5" style="display:none;">
+  <p class="text-muted mb-2">
+    ¿Te fue útil esta herramienta?
+  </p>
+
+  <button class="btn btn-outline-success share-btn" onclick="shareTool()">
+    🔗 Compartela
+  </button>
+</div>
+  
+  <!--Calificar la herramienta-->
+  <!-- RATING -->
+<div id="ratingCard" class="rating-card text-center mt-5" style="display:none;">
+  <div class="stars mb-2">
+    ⭐⭐⭐⭐⭐
+  </div>
+
+  <p class="mb-2">
+    Calificación promedio: <strong>4.9 / 5</strong>
+  </p>
+
+  <a href="https://forms.gle/z5cQZwK6Wj3sZoLM7"
+     target="_blank"
+     class="btn btn-outline-success btn-sm">
+    Calificar herramienta
+  </a>
+
+  <p class="small text-muted mt-2 mb-0">
+    Nos toma menos de 1 minuto 🙌
+  </p>
+</div>
+
+  
+
+ <hr class="my-5">
+
+<div class="alert alert-info text-center mb-4">
+  🤔 ¿Quieres entender mejor las comisiones o ver promociones activas?  
+  <br>
+  <a href="comisiones.html" class="alert-link">
+    ¿Cómo se calculan las comisiones?
+  </a> ·
+  <a href="promociones.html" class="alert-link">
+    Ver promociones actuales
+  </a>
+</div>
+
+  
+  
+
 
 </div>
 
 <!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- JS propio -->
 <script src="js/main.js"></script>
@@ -97,15 +230,26 @@
     </p>
 
     <div class="footer-links">
-      <a href="http://www.youtube.com/@cajadeherramientasymas" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" height="18">
-        YouTube
-      </a>
-    </div>
+			<a href="http://www.youtube.com/@cajadeherramientasymas" target="_blank">
+			<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" height="18">
+						YouTube
+			</a>
 
-    <p class="footer-copy">
-      © 2026 — Proyecto independiente. Información referencial.
-    </p>
+			<a href="https://www.tiktok.com/@cajadeherramientasymas" target="_blank">
+			<img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" height="18">
+						TikTok
+			</a>
+
+		<a href="mailto:cajadeherramientasymas@gmail.com">
+			<img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" height="18">
+						Contacto
+		</a>
+	</div>
+
+	<p class="footer-copy">
+  🇲🇽 Hecho en México · © 2026 — Proyecto independiente
+	</p>
+
   </div>
 </footer>
 
