@@ -21,7 +21,7 @@ body {
 /* ===== HERO ===== */
 .hero {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 80px;
   padding: 30px 20px;
 }
 
@@ -73,7 +73,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  gap: 20px;
+  gap: 30px;
 }
 
 .result-left {
@@ -196,32 +196,35 @@ body {
   }
 }
 
-/*Navbar*/
-.navbar {
-  border-radius: 12px;
-  transition: box-shadow 0.3s ease;
-  background: rgba(255, 255, 255, 0.95) !important;
-}
-
-.navbar:hover {
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
-.navbar-brand {
-  cursor: pointer;
-}
+/* ===== NAVBAR LINKS ===== */
 .navbar .nav-link {
-  color: #333 !important;
+  position: relative;
   font-weight: 500;
+  color: #333 !important;
+  transition: all 0.25s ease;
+}
+
+.navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #28a745;
+  transition: all 0.25s ease;
+  transform: translateX(-50%);
 }
 
 .navbar .nav-link:hover {
   color: #28a745 !important;
+  transform: scale(1.08);
 }
 
-.navbar-brand strong {
-  color: #222;
+.navbar .nav-link:hover::after {
+  width: 100%;
 }
+
 
 /* ===== SEPARADORES ===== */
 hr {
@@ -256,6 +259,7 @@ hr {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  margin: 0 10px;
   margin-top: 10px;
   color: #dc3545;
   font-weight: 500;
@@ -355,4 +359,148 @@ p {
   }
 }
 
+/* ===== PEOR OPCIÓN ===== */
+.loser {
+  border: 2px solid #dc3545;
+  background: #fff5f5;
+}
+
+.badge-loser {
+  background: #dc3545;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+/* ===== LOGO NAVBAR ===== */
+.navbar-logo {
+  height: 44px;
+  width: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ===== INPUT ACTIVO ===== */
+input#amount:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.input-group:focus-within {
+  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.15);
+  border-radius: 6px;
+}
+
+/*Mejora visual para las tarjetas estadisticas*/
+.stat-card {
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.05);
+  transition: transform .2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ===== STAT CARDS ===== */
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+}
+
+.stat-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.stat-info h6 {
+  margin: 0;
+  font-size: .95rem;
+  color: #555;
+}
+
+.stat-info span {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* Colores */
+.stat-green .stat-icon {
+  background: linear-gradient(135deg, #28a745, #218838);
+}
+
+.stat-blue .stat-icon {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+.stat-yellow .stat-icon {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+}
+
+/* =====CARRUSEL PROVEEDORES ===== */
+.providers-section {
+  padding: 40px 0;
+}
+
+.provider-logo {
+  max-height: 60px;
+  opacity: 0.7;
+  transition: opacity .3s ease, transform .3s ease;
+  filter: grayscale(100%);
+}
+
+.provider-logo:hover {
+  opacity: 1;
+  filter: grayscale(0);
+  transform: scale(1.08);
+}
+
+/* ===== COMPARTIR ===== */
+.share-btn {
+  border-radius: 30px;
+  padding: 10px 26px;
+  font-weight: 500;
+  transition: all .3s ease;
+}
+
+.share-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ===== RATING ===== */
+.rating-card {
+  background: #fffdf5;
+  border: 1px solid #ffe8a1;
+  border-radius: 14px;
+  padding: 24px;
+  max-width: 420px;
+  margin: 0 auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.rating-card .stars {
+  font-size: 1.6rem;
+  color: #f1c40f;
+}
 
