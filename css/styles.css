@@ -92,8 +92,8 @@ body {
 }
 
 .terminal-logo {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   margin-right: 20px;
 }
@@ -112,9 +112,15 @@ body {
 }
 
 .result-net .amount {
+  word-break: break-word;
+  overflow-wrap: anywhere;
   font-size: 1.8rem;
   font-weight: 700;
   color: #28a745;
+}
+
+.result-item {
+  overflow: hidden;
 }
 
 /* ===== GANADOR ===== */
@@ -160,11 +166,21 @@ body {
 
   .result-net {
     width: 100%;
+	min-width: unset;
     text-align: left;
     border-left: none;
     border-top: 1px dashed #e0e0e0;
+	padding-left: 0;
     padding-top: 10px;
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 0;
   }
 }
 
