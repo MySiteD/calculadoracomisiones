@@ -275,8 +275,19 @@ hr {
   font-size: 0.8rem;
   color: #888;
 }
+.disclaimer {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #777;
+  text-align: center;
+  margin-top: 24px;
+  line-height: 1.4;
+}
+
+
 
 /*Boton Calcular*/
+
 .btn-success {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
