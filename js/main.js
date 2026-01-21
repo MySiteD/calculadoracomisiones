@@ -48,6 +48,14 @@ function calculate() {
       '<div class="alert alert-danger">Ingresa un monto válido.</div>';
     return;
   }
+  
+	  /* EVENTO GTM: cálculo realizado */
+	window.dataLayer = window.dataLayer || [];
+	window.dataLayer.push({
+	  event: "calculo_realizado",
+	  monto: amount
+	});
+
 
   /* Contador de cálculos */
   calcCount++;
