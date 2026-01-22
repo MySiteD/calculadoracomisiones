@@ -1,4 +1,46 @@
 /* =========================
+   ESTADÍSTICAS GLOBALES
+   (Fuente: GA4 + Rating)
+========================= */
+
+const globalStats = {
+  calculations: 1240,      // GA4 - Recuento de eventos
+  users: 85,              // GA4 - Usuarios que compararon
+  rating: 4.8              // Rating promedio
+};
+
+/* =========================
+   ANIMACIÓN DE CONTEO
+========================= */
+
+function animateCount(element, endValue, duration = 1000) {
+  if (!element) return;
+
+  const startValue = 0;
+  const startTime = performance.now();
+
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // easing suave (easeOut)
+    const easedProgress = 1 - Math.pow(1 - progress, 3);
+    const currentValue = Math.floor(
+      startValue + (endValue - startValue) * easedProgress
+    );
+
+    element.innerText = currentValue.toLocaleString();
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+
+/* =========================
    DATOS BASE
 ========================= */
 
@@ -167,3 +209,70 @@ function shareTool() {
     window.open(whatsappUrl, "_blank");
   }
 }
+
+
+/* =========================
+   PINTAR ESTADÍSTICAS
+========================= */
+
+function renderGlobalStats() {
+  const calcEl = document.getElementById("calcCount");
+  const usersEl = document.getElementById("usersCount");
+  const ratingEl = document.getElementById("ratingValue");
+
+  if (calcEl) {
+    animateCount(calcEl, globalStats.calculations,);
+  }
+
+  if (usersEl) {
+    animateCount(usersEl, globalStats.users,);
+  }
+
+  if (ratingEl) {
+    ratingEl.innerText = `${globalStats.rating} / 5`;
+  }
+}
+
+renderGlobalStats();
+
+
+/* =========================
+   DARK MODE (AUTO + MANUAL)
+========================= */
+
+const toggleBtn = document.getElementById("themeToggle");
+
+function applyTheme(theme) {
+  document.body.classList.remove("theme-dark", "theme-light");
+
+  if (theme) {
+    document.body.classList.add(`theme-${theme}`);
+    localStorage.setItem("theme", theme);
+  } else {
+    localStorage.removeItem("theme");
+  }
+
+  // Actualizar icono si el botón existe
+  if (toggleBtn) {
+    toggleBtn.textContent =
+      document.body.classList.contains("theme-dark") ? "☀️" : "🌙";
+  }
+}
+
+// Al cargar la página
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  applyTheme(savedTheme);
+} else {
+  // Sin preferencia manual → sistema manda
+  if (toggleBtn) toggleBtn.textContent = "🌙";
+}
+
+// Click del usuario
+if (toggleBtn) {
+  toggleBtn.addEventListener("click", () => {
+    const isDark = document.body.classList.contains("theme-dark");
+    applyTheme(isDark ? "light" : "dark");
+  });
+}
+
