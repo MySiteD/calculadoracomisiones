@@ -4,7 +4,7 @@
 ========================= */
 
 const globalStats = {
-  calculations: 1240,      // GA4 - Recuento de eventos
+  calculations: 136,      // GA4 - Recuento de eventos
   users: 85,              // GA4 - Usuarios que compararon
   rating: 4.8              // Rating promedio
 };
@@ -234,5 +234,6 @@ function renderGlobalStats() {
 }
 
 renderGlobalStats();
+
 
 
