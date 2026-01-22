@@ -9,6 +9,7 @@
 	})(window,document,'script','dataLayer','GTM-M3TTRLXP');</script>
 	<!-- End Google Tag Manager -->
 
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terminales y Comisiones en México</title>
@@ -45,6 +46,10 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
+	
+	<button id="themeToggle" class="btn btn-sm btn-outline-secondary ms-2" aria-label="Cambiar tema">🌙
+    </button>
+
 
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav ms-auto">
@@ -62,8 +67,9 @@
 
 <div class="calculator-container">
 
+<section class="section section-hero">
   <!-- HERO -->
-  <div class="hero fade-in">
+    <div class="hero fade-in">
     <span class="hero-badge">Gratis · Sin registro</span>
 		<h1>¿Qué terminal te deja más dinero en México?</h1>
 		<p> Compara comisiones reales <strong>en México</strong> + IVA
@@ -75,50 +81,67 @@
       Calcular ahora
     </button>
   </div>
-  
-			<div class="row g-4 mb-5">
+ </section>
+ 
+<section class="section section-stats">
+ 
+	<div class="row g-4 mb-5">
 
 		  <!-- CÁLCULOS -->
 		  <div class="col-md-4">
-			<div class="stat-card stat-green">
-			  <div class="stat-icon">
+		  <div class="stat-card stat-green">
+			<div class="stat-icon">
 				<i class="bi bi-calculator"></i>
-			  </div>
-			  <div class="stat-info">
-				<h6>Cálculos realizados</h6>
-				<span id="calcCount">0</span>
-			  </div>
 			</div>
-		  </div>
 
-		  <!-- PROVEEDORES -->
-		  <div class="col-md-4">
-			<div class="stat-card stat-blue">
-			  <div class="stat-icon">
-				<i class="bi bi-shop"></i>
-			  </div>
-			  <div class="stat-info">
-				<h6>Proveedores analizados</h6>
-				<span id="providerCount">0</span>
-			  </div>
+		<div class="stat-info">
+			<span class="stat-value" id="calcCount">0</span>
+			<h6 class="stat-title">Cálculos realizados</h6>
+			<p class="stat-subtext">
+			Comparaciones reales hechas con la herramienta
+			</p>
 			</div>
-		  </div>
+			</div>
+		</div>
+
+		  <!-- USUARIOS -->
+			<div class="col-md-4">
+		  	<div class="stat-card stat-green">
+			<div class="stat-icon">
+				<i class="bi bi-people-fill"></i>
+			</div>
+
+		<div class="stat-info">
+			<span class="stat-value" id="usersCount">0</span>
+			<h6 class="stat-title">Usuarios que compararon</h6>
+			<p class="stat-subtext">
+			Personas que usaron la calculadora al menos una vez
+			</p>
+			</div>
+			</div>
+		</div>
 
 		  <!-- CALIFICACIÓN -->
 		  <div class="col-md-4">
-			<div class="stat-card stat-yellow">
-			  <div class="stat-icon">
+		  <div class="stat-card stat-green">
+			<div class="stat-icon">
 				<i class="bi bi-star-fill"></i>
-			  </div>
-			  <div class="stat-info">
-				<h6>Calificación Promedio</h6>
-				<span id="providerCount">4.9 / 5</span>
-			  </div>			
 			</div>
-			
-		  
 
+		<div class="stat-info">
+			<span class="stat-value" id="ratingValue">0</span>
+			<h6 class="stat-title">Calificación promedio</h6>
+			<p class="stat-subtext">
+			Basado en opiniones de usuarios reales
+			</p>
+			</div>
+			</div>
 		</div>
+		</div>
+		
+</section>
+
+<section class="section section-providers">
 		
 		<!-- PROVEEDORES -->
 	<section class="providers-section text-center my-5">
@@ -149,6 +172,10 @@
 
 	</section>
 
+</section>
+
+
+<section class="section section-calculator">
 
   <!-- INPUT -->
   <label class="form-label">Ingresa la cantidad a cobrar</label>
@@ -164,8 +191,11 @@
   <!-- RESULTADOS -->
   <hr class="my-5">
   <div id="results"></div>
-  
-    
+
+
+</section>
+
+
   <!-- COMPARTIR -->
   <div id="shareTool" class="text-center mt-5" style="display:none;">
   <p class="text-muted mb-2">
@@ -263,4 +293,3 @@
 </body>
 
 </html>
-
