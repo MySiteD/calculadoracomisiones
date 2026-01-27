@@ -1,0 +1,39 @@
+/* ===========================
+   PAGINA REFERIDOS
+=========================== */
+
+.referidos-page {
+  background: linear-gradient(180deg,#f9fafb,#ffffff);
+}
+
+/* HERO */
+
+.referidos-hero {
+  text-align: center;
+  padding: 90px 20px 50px;
+}
+
+.referidos-hero span {
+  background:#fde68a;
+  padding:6px 14px;
+  border-radius:999px;
+}
+
+.referidos-hero h1 {
+  font-size: 2.6rem;
+}
+
+/* CARD */
+
+.referidos-card {
+  background: white;
+  border-radius: 20px;
+  padding: 26px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 24px rgba(0,0,0,.05);
+}
+
+.referidos-card .btn {
+  background:#22c55e;
+  border:none;
+}
