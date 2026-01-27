@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-M3TTRLXP');</script>
-        <!-- End Google Tag Manager -->
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Promociones | Caja de Herramientas y más</title>
+
   <link rel="icon" href="logos/pago.png" type="image/png">
 
   <!-- Bootstrap -->
@@ -20,22 +14,21 @@
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
+  <!-- CSS global -->
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- CSS exclusivo Promos -->
+  <link rel="stylesheet" href="css/promociones.css">
 </head>
 
 <body>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M3TTRLXP"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        <!-- End Google Tag Manager (noscript) -->
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-glass">
   <div class="container-fluid">
 
-    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html" id="scrollTop">
-      <img src="./logos/canal-logo.jpg" class="navbar-logo" alt="Caja de Herramientas y más">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <img src="./logos/canal-logo.jpg" class="navbar-logo">
       <strong>Caja de Herramientas y más</strong>
     </a>
 
@@ -43,13 +36,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-        
-
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="comisiones.html">Comisiones</a></li>
-        <li class="nav-item"><a class="nav-link" href="promociones.html">Promociones</a></li>
+        <li class="nav-item"><a class="nav-link active" href="promociones.html">Promociones</a></li>
         <li class="nav-item"><a class="nav-link" href="referidos.html">Referidos</a></li>
       </ul>
     </div>
@@ -58,90 +49,35 @@
 </nav>
 
 <!-- CONTENIDO -->
-<div class="calculator-container">
+<div class="calculator-container promo-page">
 
-  <!-- HERO -->
-  <div class="hero">
-    <span class="hero-badge">Beneficios vigentes</span>
-    <h1>Promociones disponibles</h1>
+  <!-- HERO NUEVO -->
+  <section class="promo-hero">
+    <span class="promo-badge">Actualizado frecuentemente</span>
+    <h1>Promociones vigentes</h1>
     <p>
-      Aquí encontrarás promociones, descuentos y beneficios
-      relacionados con terminales de pago y servicios financieros.
+      Beneficios activos en terminales de pago
+      y servicios financieros en México.
     </p>
+  </section>
+
+  <!-- BUSCADOR -->
+  <div class="promo-toolbar">
+    <h2>Últimas promociones</h2>
+
+    <input
+      type="search"
+      id="promoSearch"
+      class="form-control"
+      placeholder="Buscar promoción…">
   </div>
+
+  <!-- LISTADO -->
+  <div class="row g-4 mt-4" id="promoContainer"></div>
 
   <!-- AVISO -->
-  <div class="alert alert-info mb-5">
-    📌 Las promociones pueden cambiar sin previo aviso.
-    Te recomendamos revisar siempre los términos oficiales.
-  </div>
-
-  <!-- TARJETAS DE PROMOCIÓN -->
-  <div class="row g-4">
-
-    <!-- MERCADO PAGO -->
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body text-center">
-          <img src="./logos/mercado-pago.png" class="img-fluid mb-3" style="max-height:80px;">
-          <h5>Mercado Pago</h5>
-          <p class="small text-muted">
-            Promociones en terminales Point, bonificaciones
-            y beneficios para nuevos usuarios.
-          </p>
-          <a href="https://www.mercadopago.com.mx/point"
-             target="_blank"
-             class="btn btn-outline-success">
-            Ver promoción
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLIP -->
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body text-center">
-          <img src="./logos/clip.png" class="img-fluid mb-3" style="max-height:80px;">
-          <h5>Clip</h5>
-          <p class="small text-muted">
-            Descuentos en terminales, meses sin intereses
-            y promociones para emprendedores.
-          </p>
-          <a href="https://www.clip.mx"
-             target="_blank"
-             class="btn btn-outline-success">
-            Ver promoción
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ZETTLE -->
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body text-center">
-          <img src="./logos/zettle.png" class="img-fluid mb-3" style="max-height:80px;">
-          <h5>Zettle by PayPal</h5>
-          <p class="small text-muted">
-            Beneficios por contratar terminal
-            y vinculación con PayPal.
-          </p>
-          <a href="https://www.zettle.com/mx"
-             target="_blank"
-             class="btn btn-outline-success">
-            Ver promoción
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- TRANSPARENCIA -->
   <div class="alert alert-warning mt-5">
-    ⚠️ Algunos enlaces pueden ser enlaces de afiliado.
-    Esto no representa un costo adicional para ti.
+    ⚠️ Algunos enlaces pueden ser de afiliado.
   </div>
 
 </div>
@@ -153,31 +89,36 @@
     <p class="footer-text">
       Promociones recopiladas con fines informativos.
     </p>
+
+    <div class="footer-links">
+      <a href="https://www.youtube.com/@cajadeherramientasymas" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" height="18">
+        YouTube
+      </a>
+
+      <a href="https://www.tiktok.com/@cajadeherramientasymas" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" height="18">
+        TikTok
+      </a>
+
+      <a href="mailto:cajadeherramientasymas@gmail.com">
+        <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" height="18">
+        Contacto
+      </a>
+    </div>
+
+    <p class="footer-copy">
+      🇲🇽 Hecho en México · © 2026 — Proyecto independiente
+    </p>
   </div>
-  <div class="footer-links">
-			<a href="http://www.youtube.com/@cajadeherramientasymas" target="_blank">
-			<img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" height="18">
-						YouTube
-			</a>
-
-			<a href="https://www.tiktok.com/@cajadeherramientasymas" target="_blank">
-			<img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" height="18">
-						TikTok
-			</a>
-
-		<a href="mailto:cajadeherramientasymas@gmail.com">
-			<img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" height="18">
-						Contacto
-		</a>
-	</div>
-
-	<p class="footer-copy">
-  🇲🇽 Hecho en México · © 2026 — Proyecto independiente
-	</p>
 </footer>
 
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/promociones-data.js"></script>
+<script src="js/promociones.js"></script>
+<script src="js/nav-active.js"></script>
 
 </body>
 </html>
