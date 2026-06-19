@@ -1,6 +1,0 @@
-{
-  "name": "Caja de Herramientas y Más",
-  "description": "Comparador inteligente y simulador de comisiones de terminales de pago en México con asesoramiento financiero impulsado por IA.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
