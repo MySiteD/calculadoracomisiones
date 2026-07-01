@@ -289,33 +289,45 @@ export default function Calculator() {
       // Disclaimer Box
       doc.setFillColor(254, 253, 237); // Light amber background
       doc.setDrawColor(254, 240, 138); // Soft yellow border
-      doc.roundedRect(15, currentY, pageWidth - 30, 24, 2, 2, "FD");
+      doc.roundedRect(15, currentY, pageWidth - 30, 26, 2, 2, "FD");
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8);
       doc.setTextColor(133, 77, 14); // Dark gold
-      doc.text("INFORMACION Y RETENCIONES LEGALES:", 18, currentY + 5);
+      doc.text("AVISO LEGAL Y EXCLUSION DE RESPONSABILIDAD:", 18, currentY + 5);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(113, 63, 18);
-      const splitDisclaimer1 = "Las comisiones mostradas representan estimaciones operativas y de mercado vigentes. Por mandato legal del SAT,";
-      const splitDisclaimer2 = "las terminales en Mexico deben gravar un 16% de IVA sobre las comisiones transaccionales, el cual desglosamos";
-      const splitDisclaimer3 = "en el reporte para que conozcas tu liquidez real. No representa asesoría fiscal final.";
+      const splitDisclaimer1 = "Este reporte es un simulador de caracter estimativo e informativo basado en las tasas publicas de los agregadores";
+      const splitDisclaimer2 = "en Mexico a junio de 2026. Por mandato de ley, las comisiones gravan 16% de IVA, el cual desglosamos aqui para";
+      const splitDisclaimer3 = "reflejar tu liquidez neta real. Caja de Herramientas y Mas no garantiza la exactitud absoluta de los valores ni";
+      const splitDisclaimer4 = "se hace responsable por cambios de tarifas o politicas de los proveedores, ni por decisiones tomadas con este reporte.";
       doc.text(splitDisclaimer1, 18, currentY + 10);
       doc.text(splitDisclaimer2, 18, currentY + 14);
       doc.text(splitDisclaimer3, 18, currentY + 18);
+      doc.text(splitDisclaimer4, 18, currentY + 22);
 
       // Footer
-      const footerY = pageHeight - 15;
+      const footerY = pageHeight - 24;
       doc.setDrawColor(226, 232, 240);
       doc.line(15, footerY - 4, pageWidth - 15, footerY - 4);
       
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7);
+      doc.setTextColor(textMuted[0], textMuted[1], textMuted[2]);
+      
+      // Social Networks list
+      doc.text("Facebook: facebook.com/share/1aBs1jun2w/", 15, footerY + 1);
+      doc.text("YouTube: youtube.com/@cajadeherramientasymas", 110, footerY + 1);
+      doc.text("TikTok: @cajadeherramientasymas", 15, footerY + 5.5);
+      doc.text("Gmail: cajadeherramientasymas@gmail.com", 110, footerY + 5.5);
+
+      // Copyright / Brand info
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
-      doc.setTextColor(textMuted[0], textMuted[1], textMuted[2]);
-      doc.text("Hecho de forma independiente con Caja de Herramientas y Mas.", 15, footerY + 1);
-      doc.text("cajadeherramientasymas.com", pageWidth - 15, footerY + 1, { align: "right" });
+      doc.text("Hecho de forma independiente con Caja de Herramientas y Mas.", 15, footerY + 13);
+      doc.text("cajadeherramientasymas.com", pageWidth - 15, footerY + 13, { align: "right" });
 
       const sanitizedAmount = parseFloat(amount).toFixed(0);
       doc.save(`comparador_comisiones_${sanitizedAmount}_mxn.pdf`);

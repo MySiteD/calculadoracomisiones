@@ -44,7 +44,7 @@ export default function BrandLogo({ name, size = "md", className = "" }: BrandLo
   
   // Custom images are hosted in `/logos/` folder inside the `public` directory
   // (e.g. `/public/logos/clip.svg` is accessible as `/logos/clip.svg` in Vite)
-  const localImageUrl = brandKey ? `/logos/${brandKey}.png` : "";
+  const localImageUrl = brandKey ? `/logos/${brandKey}.svg` : "";
 
   // Render high-fidelity, polished, responsive inline SVG vectors as the beautiful out-of-the-box fallback
   const renderFallbackLogo = () => {
