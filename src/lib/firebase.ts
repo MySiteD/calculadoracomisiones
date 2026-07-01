@@ -175,7 +175,7 @@ const DEFAULT_REVIEWS: Omit<UserReview, "id">[] = [
     timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
   },
   {
-    name: "Carlos Villa",
+    name: "Carlos Villagrán",
     businessType: "Boutique Vanguardia",
     rating: 5,
     comment: "El desglose de IVA de las comisiones es súper exacto. Ninguna otra página te dice con precisión cuánto te va a depositar el banco realmente. Altamente recomendado.",
