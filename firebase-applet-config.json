@@ -1,10 +1,9 @@
 {
-  "projectId": "carbon-presence-jf4nj",
-  "appId": "1:1013367890329:web:ae9715e515f319507bf308",
-  "apiKey": "AIzaSyDHsbFZ0BeAjS_6w0WFFJVxmOzs4FPxpRc",
-  "authDomain": "carbon-presence-jf4nj.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-cajadeherramient-f95425ed-8fa6-4df0-96c9-07b34046d322",
-  "storageBucket": "carbon-presence-jf4nj.firebasestorage.app",
-  "messagingSenderId": "1013367890329",
-  "measurementId": ""
+  "projectId": "web-herramientas",
+  "appId": "1:11492397005:web:71a00672384243e59fbe84",
+  "apiKey": "AIzaSyBWOMhP27HJFTdfSh2dvN7sfkkoY3KDKRc",
+  "authDomain": "web-herramientas.firebaseapp.com",
+  "storageBucket": "web-herramientas.firebasestorage.app",
+  "messagingSenderId": "11492397005",
+  "measurementId": "G-5ELFBYFWZ1"
 }
