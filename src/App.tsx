@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import StatsDashboard from "./components/StatsDashboard";
+import Testimonials from "./components/Testimonials";
 import Calculator from "./components/Calculator";
 import AiAdvisor from "./components/AiAdvisor";
 import ComisionesInfo from "./components/ComisionesInfo";
 import Promociones from "./components/Promociones";
 import Referidos from "./components/Referidos";
+import FaqSection from "./components/FaqSection";
 import Footer from "./components/Footer";
+import CarouselBanner from "./components/CarouselBanner";
 
 export default function App() {
   const [activeSection, setActiveSection] = useState("inicio");
@@ -73,6 +77,79 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Dynamically update SEO, Open Graph and Twitter Cards meta tags based on current active section
+  useEffect(() => {
+    const metaConfig: Record<string, { title: string; description: string }> = {
+      inicio: {
+        title: "Calculadora de Comisiones de Terminales en México | Compara Clip, Mercado Pago, Zettle y Ualá",
+        description: "Calcula y compara en tiempo real las comisiones con IVA desglosado de terminales de cobro (TPV) en México. Simula Débito, Crédito y Meses sin Intereses (MSI)."
+      },
+      "asesor-ai": {
+        title: "Asesor Financiero con Inteligencia Artificial | Terminales de Pago México",
+        description: "Recibe recomendaciones financieras en vivo impulsadas por IA para seleccionar el mejor agregador de pagos para tu comercio en México."
+      },
+      comisiones: {
+        title: "Tasas y Comisiones de Terminales en México 2026 | Clip, Mercado Pago, Zettle",
+        description: "Consulta el listado completo de tasas de descuento vigentes a 2026 para todos los proveedores de cobro móvil con tarjeta."
+      },
+      promociones: {
+        title: "Cupones y Promociones Exclusivas de Terminales Móviles",
+        description: "Ahorra en la compra de tu lector de tarjetas o terminal Point con ofertas y descuentos especiales para nuevos comercios."
+      },
+      testimonios: {
+        title: "Testimonios y Reseñas de Terminales de Pago en México | Casos Reales",
+        description: "Opiniones y valoraciones reales de comercios y emprendedores sobre Clip, Mercado Pago, Zettle, y Ualá."
+      },
+      referidos: {
+        title: "Alianzas y Recursos Recomendados para Negocios Mexicanos",
+        description: "Descubre soluciones de ahorro, préstamos en efectivo inmediatos, créditos de negocio y más beneficios exclusivos."
+      }
+    };
+
+    const currentMeta = metaConfig[activeSection] || metaConfig.inicio;
+
+    // Update standard HTML title
+    document.title = currentMeta.title;
+
+    // Update meta description tag
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", currentMeta.description);
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute("content", currentMeta.title);
+    }
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+      ogDesc.setAttribute("content", currentMeta.description);
+    }
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute("content", `https://calculadoracomisiones-three.vercel.app/#${activeSection}`);
+    }
+
+    // Update Twitter Cards tags
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twTitle) {
+      twTitle.setAttribute("content", currentMeta.title);
+    }
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twDesc) {
+      twDesc.setAttribute("content", currentMeta.description);
+    }
+
+    const twUrl = document.querySelector('meta[name="twitter:url"]');
+    if (twUrl) {
+      twUrl.setAttribute("content", `https://calculadoracomisiones-three.vercel.app/#${activeSection}`);
+    }
+  }, [activeSection]);
+
   return (
     <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 overflow-hidden font-sans">
       
@@ -89,11 +166,20 @@ export default function App() {
       {/* Floating Navbar */}
       <Navbar activeSection={activeSection} theme={theme} toggleTheme={toggleTheme} />
 
+      {/* Real-time Carousel Banner right below navigation bar */}
+      <CarouselBanner />
+
       {/* Layout Content */}
       <main className="relative pb-1" id="landing-container">
         
         {/* Hero Section */}
         <Hero />
+
+        {/* Real-time Stats & Authority Dashboard */}
+        <StatsDashboard />
+
+        {/* Real-time Testimonials Carousel */}
+        <Testimonials />
 
         {/* 1. Calculator Section */}
         <Calculator />
@@ -109,6 +195,9 @@ export default function App() {
 
         {/* 5. Recommended referrals and resources allied */}
         <Referidos />
+
+        {/* 6. AI-powered FAQ & Objections Solver Accordion */}
+        <FaqSection />
 
       </main>
 

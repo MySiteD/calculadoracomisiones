@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { referidos } from "../data";
 import { trackReferralClick } from "../utils/analytics";
+import BrandLogo from "./BrandLogo";
 import { 
   Award, 
   Smartphone, 
@@ -139,7 +140,7 @@ export default function Referidos() {
           </button>
         </div>
 
-        {/* Grid links list */}
+         {/* Grid links list */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {filteredLinks.map((item) => {
             const isHighlight = item.id === "mp-terminal" || item.id === "nu-cuenta";
@@ -147,29 +148,31 @@ export default function Referidos() {
               <div
                 key={item.id}
                 id={`referral-card-${item.id}`}
-                className={`bg-white dark:bg-slate-900 border rounded-3xl p-5 md:p-6 flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] relative overflow-hidden group ${
+                className={`bg-white dark:bg-slate-900 border rounded-[2rem] p-6 flex flex-col justify-between transition-all duration-350 hover:translate-y-[-4px] relative overflow-hidden group ${
                   isHighlight 
-                    ? "border-indigo-300 dark:border-indigo-500/55 shadow-lg shadow-indigo-100/40 dark:shadow-none hover:shadow-xl hover:shadow-indigo-100/60" 
-                    : "border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/50 shadow-sm shadow-slate-100/50 dark:shadow-none"
+                    ? "border-indigo-200 dark:border-indigo-900 shadow-md hover:shadow-xl hover:shadow-indigo-500/5 dark:shadow-none" 
+                    : "border-slate-200/90 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm hover:shadow-md dark:shadow-none"
                 }`}
               >
                 {/* Visual Accent for Highlighted Cards */}
                 {isHighlight && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-bl-2xl shadow-sm animate-pulse">
-                    🔥 Descuento Máximo
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-indigo-500 to-indigo-700 text-white text-[9px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-bl-2xl shadow-sm animate-pulse">
+                    🔥 Recomendado
                   </div>
                 )}
 
                 <div>
                   {/* Brand Header */}
                   <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-205/60 dark:border-slate-700 flex items-center justify-center">
-                        <DynamicIcon name={item.iconName} color={item.color} />
-                      </div>
+                    <div className="flex items-center gap-3">
+                      <BrandLogo name={item.provider} size="lg" className="group-hover:scale-105 transition-transform duration-300" />
                       <div>
-                        <h4 className="text-slate-900 dark:text-white font-extrabold text-sm md:text-base leading-none">{item.name}</h4>
-                        <span className="text-[10px] text-slate-400 dark:text-slate-450 font-bold block mt-1.5">{item.provider}</span>
+                        <h4 className="text-slate-900 dark:text-white font-extrabold text-sm md:text-base leading-snug tracking-tight">
+                          {item.name}
+                        </h4>
+                        <span className="text-[10px] text-slate-450 dark:text-slate-500 font-bold block mt-0.5">
+                          {item.provider}
+                        </span>
                       </div>
                     </div>
                     
@@ -181,20 +184,20 @@ export default function Referidos() {
                           ? "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-100/60 dark:border-amber-900/40"
                           : "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border-indigo-100/60 dark:border-indigo-900/40"
                       }`}>
-                        {item.category === "terminal" ? "Terminal" : item.category === "prestamo" ? "Préstamo" : "Ahorro/Crédito"}
+                        {item.category === "terminal" ? "Terminal TPV" : item.category === "prestamo" ? "Efectivo" : "Ahorro/Crédito"}
                       </span>
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-505 dark:text-slate-300 leading-relaxed mb-4 font-semibold">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-5 font-semibold">
                     {item.description}
                   </p>
 
-                  {/* Benefits lists */}
-                  <ul className="mb-6 space-y-2 border-t border-slate-50 dark:border-slate-800 pt-3">
+                  {/* Benefits lists with Google Bullet Style */}
+                  <ul className="mb-6 space-y-2 border-t border-slate-100/70 dark:border-slate-800/60 pt-4">
                     {item.benefits.map((benefit, i) => (
-                      <li key={i} className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-350 font-bold">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-[11px] text-slate-600 dark:text-slate-350 font-bold leading-normal">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
                         <span>{benefit}</span>
                       </li>
                     ))}
@@ -202,19 +205,15 @@ export default function Referidos() {
                 </div>
 
                 {/* Actions */}
-                <div className="border-t border-slate-100 dark:border-slate-800 pt-4">
+                <div className="border-t border-slate-100/80 dark:border-slate-800/80 pt-4 mt-auto">
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackReferralClick(item.id, item.name, item.link)}
-                    className={`w-full inline-flex items-center justify-center gap-1.5 font-extrabold text-xs py-3 px-4 rounded-xl transition-all duration-300 cursor-pointer text-center group/btn ${
-                      isHighlight
-                        ? "bg-slate-900 dark:bg-slate-800 hover:bg-indigo-650 dark:hover:bg-indigo-600 text-white hover:shadow-lg hover:shadow-indigo-500/25 dark:hover:shadow-indigo-500/10"
-                        : "bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-600 text-indigo-700 dark:text-indigo-300 hover:text-white dark:hover:text-white border border-indigo-100/50 dark:border-indigo-900/30 hover:shadow-lg hover:shadow-indigo-500/10"
-                    }`}
+                    className="w-full inline-flex items-center justify-center gap-1.5 font-extrabold text-xs py-3 px-4 rounded-xl transition-all duration-300 cursor-pointer text-center group/btn bg-slate-900 dark:bg-slate-800 text-white hover:bg-indigo-600 dark:hover:bg-indigo-650 hover:shadow-md hover:shadow-indigo-500/10"
                   >
-                    Abrir o Solicitar con Beneficio
+                    Obtener Beneficio Especial
                     <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
                   </a>
                 </div>

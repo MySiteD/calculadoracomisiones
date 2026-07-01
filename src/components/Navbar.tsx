@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Landmark, Compass, Award, Tag, Sparkles, HelpCircle, Sun, Moon } from "lucide-react";
+import SearchPalette from "./SearchPalette";
 
 interface NavbarProps {
   activeSection: string;
@@ -24,7 +25,7 @@ export default function Navbar({ activeSection, theme, toggleTheme }: NavbarProp
     { id: "asesor-ai", label: "Consultor IA", icon: Sparkles },
     { id: "comisiones", label: "Comisiones", icon: Landmark },
     { id: "promociones", label: "Promociones", icon: Tag },
-    { id: "referidos", label: "Recursos recomendados", icon: Award },
+    { id: "referidos", label: "Recomendados", icon: Award },
   ];
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -43,37 +44,37 @@ export default function Navbar({ activeSection, theme, toggleTheme }: NavbarProp
   return (
     <header 
       id="main-header"
-      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl rounded-2xl z-50 transition-all duration-300 border ${
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-7xl rounded-2xl z-50 transition-all duration-300 border ${
         isScrolled 
-          ? "bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-slate-200/80 dark:border-slate-800/80 shadow-[0_15px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_15px_30px_rgba(0,0,0,0.3)] py-3" 
-          : "bg-white/65 dark:bg-slate-900/65 backdrop-blur-sm border-slate-200/40 dark:border-slate-800/40 py-4 shadow-sm"
+          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-slate-200/80 dark:border-slate-800/80 shadow-[0_15px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_15px_30px_rgba(0,0,0,0.3)] py-3" 
+          : "bg-white/75 dark:bg-slate-900/75 backdrop-blur-sm border-slate-200/40 dark:border-slate-800/40 py-4 shadow-sm"
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+      <div className="w-full flex items-center justify-between px-4 sm:px-5 xl:px-6">
         {/* Logo */}
         <a 
           href="#inicio" 
           onClick={(e) => handleLinkClick(e, "inicio")}
-          className="flex items-center gap-2.5 group"
+          className="flex items-center gap-2 md:gap-2.5 group shrink-0"
           id="nav-logo"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-indigo-700 p-0.5 shadow-md shadow-indigo-500/10 transition-transform duration-300 group-hover:scale-105">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-indigo-700 p-0.5 shadow-md shadow-indigo-500/10 transition-transform duration-300 group-hover:scale-105 shrink-0">
             <div className="w-full h-full bg-white dark:bg-slate-950 rounded-[10px] flex items-center justify-center text-xs font-black text-indigo-600 dark:text-indigo-400">
               C
             </div>
           </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-sm md:text-base text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+          <div className="flex flex-col shrink-0">
+            <span className="font-extrabold text-xs sm:text-sm md:text-base text-slate-900 dark:text-slate-100 tracking-tight leading-none whitespace-nowrap">
               Caja de Herramientas
             </span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-none mt-1 font-medium">
+            <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 leading-none mt-1 font-medium whitespace-nowrap">
               y más · Control Financiero
             </span>
           </div>
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1.5" id="desktop-nav">
+        <nav className="hidden lg:flex items-center gap-1 xl:gap-2 mx-2" id="desktop-nav">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -82,27 +83,30 @@ export default function Navbar({ activeSection, theme, toggleTheme }: NavbarProp
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={(e) => handleLinkClick(e, item.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 ${
+                className={`flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 whitespace-nowrap ${
                   isActive 
                     ? "text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-100/80 dark:border-indigo-900/50" 
                     : "text-slate-600 dark:text-slate-300 border border-transparent hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/40"
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-450 dark:text-slate-400'}`} />
-                {item.label}
+                <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-450 dark:text-slate-400'}`} />
+                <span>{item.label}</span>
               </a>
             );
           })}
         </nav>
 
         {/* Floating Contact/CTA + Theme Toggle */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
+          {/* Quick Command Search */}
+          <SearchPalette />
+
           {/* Theme Toggle Button */}
           <button
             type="button"
             id="toggle-theme-btn"
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-705 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-amber-400 transition-all bg-slate-50/50 hover:bg-slate-100 dark:bg-slate-950/60 hover:dark:bg-slate-950 cursor-pointer select-none"
+            className="p-2 md:p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-705 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-amber-400 transition-all bg-slate-50/50 hover:bg-slate-100 dark:bg-slate-950/60 hover:dark:bg-slate-950 cursor-pointer select-none"
             title={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
           >
             {theme === "dark" ? (
@@ -115,7 +119,7 @@ export default function Navbar({ activeSection, theme, toggleTheme }: NavbarProp
           <a 
             href="#referidos" 
             onClick={(e) => handleLinkClick(e, "referidos")}
-            className="hidden md:inline-flex items-center gap-1.5 bg-indigo-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/15 active:scale-95 shadow-sm"
+            className="hidden xl:inline-flex items-center gap-1.5 bg-indigo-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/15 active:scale-95 shadow-sm whitespace-nowrap"
             id="cta-nav-button"
           >
             <Award className="w-3.5 h-3.5" />

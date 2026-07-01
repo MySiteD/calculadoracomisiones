@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { providers } from "../data";
+import BrandLogo from "./BrandLogo";
 import { CalculationResult } from "../types";
 import { trackSimulate } from "../utils/analytics";
+import { trackCalculation } from "../lib/firebase";
 import { jsPDF } from "jspdf";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   TrendingUp, 
   Percent, 
@@ -14,6 +17,7 @@ import {
   ArrowRight,
   Sparkles,
   Info,
+  ShieldAlert,
   Download,
   History,
   Columns,
@@ -21,7 +25,11 @@ import {
   X,
   Check,
   Settings,
-  Save
+  Save,
+  Share2,
+  Copy,
+  Mail,
+  MessageSquare
 } from "lucide-react";
 
 interface HistoryEntry {
@@ -68,6 +76,8 @@ export default function Calculator() {
   const [selectedComparison, setSelectedComparison] = useState<string[]>([]);
   const [isConfiguring, setIsConfiguring] = useState<boolean>(false);
   const [configSavedToast, setConfigSavedToast] = useState<boolean>(false);
+  const [isShareOpen, setIsShareOpen] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     const savedCount = localStorage.getItem("calcCount");
@@ -325,6 +335,9 @@ export default function Calculator() {
     // Trace simulation event with Google Analytics
     trackSimulate(parsedAmount, methodVal, methodVal === "msi" ? msiVal : undefined);
 
+    // Increment calculations count in real-time Firestore database
+    trackCalculation();
+
     // Process calculations
     const isMsi = methodVal === "msi";
     const computedResults: CalculationResult[] = providers.map((p) => {
@@ -419,6 +432,53 @@ export default function Calculator() {
     }
     runCalculation(entry.amount, entry.paymentMethod, entry.msiMonths);
   };
+
+  const getShareUrl = () => {
+    const baseUrl = window.location.origin + window.location.pathname;
+    const params = new URLSearchParams();
+    if (amount) params.set("amount", amount);
+    if (paymentMethod) params.set("method", paymentMethod);
+    if (paymentMethod === "msi" && msiMonths) params.set("msi", msiMonths);
+    return `${baseUrl}?${params.toString()}`;
+  };
+
+  const getShareMessage = () => {
+    const formattedAmount = parseFloat(amount).toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const methodStr = paymentMethod === "regular" ? "Tarjeta de Débito/Crédito regular" : `Meses sin Intereses (${msiMonths} meses)`;
+    const bestProvider = results[0];
+    let msg = `¡Hola! Estaba calculando comisiones de TPV en México y encontré la mejor opción:\n\n`;
+    msg += `• Monto: $${formattedAmount} MXN\n`;
+    msg += `• Método de pago: ${methodStr}\n`;
+    if (bestProvider) {
+      const formattedPayout = bestProvider.netPayout.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      msg += `• Mejor opción: ${bestProvider.name} (Retorno neto: $${formattedPayout} MXN)\n`;
+    }
+    msg += `\nVer simulación completa en Caja de Herramientas y Más:\n${getShareUrl()}`;
+    return msg;
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(getShareUrl()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlAmount = params.get("amount");
+    const urlMethod = params.get("method");
+    const urlMsi = params.get("msi");
+
+    if (urlAmount) {
+      setAmount(urlAmount);
+      const method = urlMethod || "regular";
+      const msi = urlMsi || "3";
+      setPaymentMethod(method);
+      setMsiMonths(msi);
+      runCalculation(urlAmount, method, msi);
+    }
+  }, []);
 
   const toggleComparison = (providerName: string) => {
     setSelectedComparison((prev) => {
@@ -627,6 +687,86 @@ export default function Calculator() {
                   <Download className="w-3.5 h-3.5 text-white" />
                   Descargar PDF
                 </button>
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsShareOpen(!isShareOpen)}
+                    className="inline-flex items-center gap-1.5 text-[10px] uppercase font-extrabold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 hover:shadow-md px-3 py-1.5 rounded-lg transition-all cursor-pointer select-none"
+                  >
+                    <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                    Compartir
+                  </button>
+
+                  <AnimatePresence>
+                    {isShareOpen && (
+                      <>
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setIsShareOpen(false)}
+                        />
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute right-0 bottom-full mb-2 sm:bottom-auto sm:top-full sm:mt-2 z-50 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl shadow-slate-100 dark:shadow-none"
+                        >
+                          <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                              Compartir Simulación
+                            </span>
+                            <button 
+                              onClick={() => setIsShareOpen(false)}
+                              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          <div className="space-y-2">
+                            <button
+                              onClick={handleCopyLink}
+                              className="w-full flex items-center justify-between px-3 py-2 bg-slate-50 hover:bg-indigo-50/60 dark:bg-slate-950/30 dark:hover:bg-indigo-950/30 border border-slate-150 dark:border-slate-800/80 rounded-xl text-left transition-colors cursor-pointer group"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <Copy className="w-3.5 h-3.5 text-indigo-500" />
+                                <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                                  {copied ? "¡Enlace copiado!" : "Copiar enlace directo"}
+                                </span>
+                              </div>
+                              {copied && <Check className="w-3.5 h-3.5 text-emerald-500" />}
+                            </button>
+
+                            <a
+                              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(getShareMessage())}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setIsShareOpen(false)}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 bg-slate-50 hover:bg-emerald-50/60 dark:bg-slate-950/30 dark:hover:bg-emerald-950/30 border border-slate-150 dark:border-slate-800/80 rounded-xl text-left transition-colors cursor-pointer group"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5 text-emerald-500" />
+                              <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                                Compartir por WhatsApp
+                              </span>
+                            </a>
+
+                            <a
+                              href={`mailto:?subject=${encodeURIComponent("Simulación de comisiones de TPV en México")}&body=${encodeURIComponent(getShareMessage())}`}
+                              onClick={() => setIsShareOpen(false)}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 bg-slate-50 hover:bg-sky-50/60 dark:bg-slate-950/30 dark:hover:bg-sky-950/30 border border-slate-150 dark:border-slate-800/80 rounded-xl text-left transition-colors cursor-pointer group"
+                            >
+                              <Mail className="w-3.5 h-3.5 text-sky-500" />
+                              <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-300 group-hover:text-sky-600 dark:group-hover:text-sky-400">
+                                Compartir por Correo
+                              </span>
+                            </a>
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
 
@@ -720,6 +860,7 @@ export default function Calculator() {
                               }}
                               className="w-4 h-4 text-indigo-650 rounded bg-slate-905 border-slate-700 focus:ring-indigo-500 rounded-sm"
                             />
+                            <BrandLogo name={p.name} size="xs" />
                             <div className="flex flex-col text-left">
                               <span className="text-xs font-bold leading-tight">{p.name}</span>
                               <span className="text-[9px] text-slate-500">{(p.baseRate * 100).toFixed(1)}% tasa base</span>
@@ -912,10 +1053,7 @@ export default function Calculator() {
                       {/* Left: Brand Metadata */}
                       <div className="flex flex-col items-start gap-2.5">
                         <div className="flex flex-wrap items-center gap-3">
-                          <span 
-                            className="w-2.5 h-2.5 rounded-full" 
-                            style={{ backgroundColor: r.color }}
-                          />
+                          <BrandLogo name={r.name} size="sm" />
                           <h4 className="text-slate-900 text-lg font-black leading-none">{r.name}</h4>
                           
                           <button
@@ -1028,6 +1166,34 @@ export default function Calculator() {
             <p className="text-xl md:text-2xl font-extrabold text-slate-900 mt-1">
               99.9%
             </p>
+          </div>
+        </div>
+
+        {/* ====================================
+            AVISO LEGAL Y DESCARGO DE RESPONSABILIDAD
+            ==================================== */}
+        <div id="legal-disclaimer-container" className="mt-8 bg-slate-50/80 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-4xl mx-auto shadow-xs">
+          <div className="flex gap-4">
+            <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 shrink-0 shadow-2xs">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center gap-2 sm:gap-0">
+                <ShieldAlert className="w-4 h-4 text-slate-500 block sm:hidden shrink-0" />
+                <h4 className="font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[10px]">
+                  Aviso Legal y de Exclusión de Responsabilidad (Disclaimer)
+                </h4>
+              </div>
+              <p>
+                Los cálculos, comparativas de comisiones y resultados proyectados en esta plataforma son generados con fines <strong>estrictamente informativos, pedagógicos, de simulación y referencia orientativa</strong>. El usuario reconoce y acepta que las tasas, comisiones adicionales, recargos por meses sin intereses (MSI), e impuestos de las terminales de pago cambian con frecuencia según las políticas internas de cada proveedor y las condiciones del mercado.
+              </p>
+              <p>
+                Este simulador no constituye ni debe interpretarse como asesoría financiera, fiscal, contable, mercantil, contractual o jurídica personalizada. La plataforma y sus creadores quedan <strong>exentos de cualquier tipo de responsabilidad civil, penal, administrativa o comercial</strong> ante decisiones de negocio tomadas a partir de estos simuladores, pérdidas financieras, errores de captura, interpretaciones incorrectas de tasas efectivas, o cualquier infracción administrativa o fiscal imputable al usuario o terceros relacionados con la comparación de estos datos.
+              </p>
+              <p className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
+                Para decisiones comerciales definitivas y validez jurídica, el usuario asume la total obligación de verificar y contrastar los datos, comisiones y contratos directamente en los portales oficiales y contratos vigentes de cada marca proveedora autorizada.
+              </p>
+            </div>
           </div>
         </div>
 

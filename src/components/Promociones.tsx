@@ -1,5 +1,6 @@
 import { promotions } from "../data";
 import { ExternalLink, ShieldAlert, BadgeCheck } from "lucide-react";
+import BrandLogo from "./BrandLogo";
 
 export default function Promociones() {
   return (
@@ -40,9 +41,7 @@ export default function Promociones() {
             >
               <div>
                 <div className="flex items-center gap-2 mb-3.5 pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40 text-indigo-700 dark:text-indigo-400 flex items-center justify-center font-black text-xs uppercase shadow-sm">
-                    {promo.name[0]}
-                  </div>
+                  <BrandLogo name={promo.name} size="sm" />
                   <h4 className="text-slate-900 dark:text-white font-extrabold text-xs sm:text-sm">{promo.name}</h4>
                 </div>
                 

@@ -164,6 +164,18 @@ export const referidos: ReferidoLink[] = [
     iconName: "Coins",
     benefits: ["Aprobación en minutos", "Sin aval ni garantías", "Depósito inmediato por SPEI"],
     category: "prestamo"
+  },
+  {
+    id: "baubap-prestamos",
+    name: "Préstamos Baubap",
+    provider: "Baubap",
+    description: "Micropréstamos móviles con aprobación inmediata las 24 horas, sin revisar Buró de Crédito y con reembolso de intereses al pagar a tiempo.",
+    logo: "./logos/baubap.png",
+    color: "#00b894",
+    link: "https://bap.mx/PExk7",
+    iconName: "Coins",
+    benefits: ["Sin Buró ni aval requerido", "Aprobación veloz en 15 minutos", "Bonificación por pago puntual"],
+    category: "prestamo"
   }
 ];
 

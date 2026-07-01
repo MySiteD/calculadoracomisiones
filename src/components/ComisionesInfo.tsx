@@ -1,5 +1,6 @@
 import { providers } from "../data";
 import { Calculator, Percent, Info, ExternalLink, HelpCircle } from "lucide-react";
+import BrandLogo from "./BrandLogo";
 
 export default function ComisionesInfo() {
   return (
@@ -134,63 +135,84 @@ export default function ComisionesInfo() {
         </div>
 
         {/* List of analyzed providers */}
-        <h3 className="text-base font-extrabold text-slate-900 mb-6 flex items-center gap-2">
-          <Percent className="w-4 h-4 text-indigo-650" />
-          Proveedores analizados de forma transparente
+        <h3 className="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <Percent className="w-4 h-4 text-indigo-650 dark:text-indigo-450" />
+          Proveedores analizados de forma transparente (de menor a mayor comisión)
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {providers.map((p) => {
-            const isLowest = p.name === "Ualá Bis";
-            return (
-              <div 
-                key={p.name}
-                id={`card-info-${p.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="bg-white border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:translate-y-[-2px] shadow-sm shadow-slate-100/50"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3.5">
-                    <h4 className="text-slate-900 font-black text-sm md:text-base flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color }} />
-                      {p.name}
-                    </h4>
-                    <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded border ${
-                      isLowest 
-                        ? "bg-emerald-50 text-emerald-750 border-emerald-250 font-black" 
-                        : "bg-indigo-50 text-indigo-700 border-indigo-150"
-                    }`}>
-                      {isLowest ? "Tasa Más Baja" : `Tasa: ${(p.baseRate * 100).toFixed(1)}% + IVA`}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4 font-semibold">
-                    {p.description}
-                  </p>
-                  
-                  {/* Bullet points for benefits */}
-                  <ul className="space-y-1.5 mt-2 mb-4">
-                    {p.benefits.map((b) => (
-                      <li key={b} className="text-[11px] text-slate-600 flex items-center gap-1.5 font-bold">
-                        <span className="w-1 h-1 rounded-full bg-indigo-500" />
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          {[...providers]
+            .sort((a, b) => a.baseRate - b.baseRate)
+            .map((p) => {
+              const isLowest = p.name === "Ualá Bis";
+              return (
+                <div 
+                  key={p.name}
+                  id={`card-info-${p.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:translate-y-[-2px] shadow-sm shadow-slate-100/50 dark:shadow-none"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-slate-900 dark:text-white font-black text-sm md:text-base flex items-center gap-2.5">
+                        <BrandLogo name={p.name} size="sm" />
+                        {p.name}
+                      </h4>
+                      {isLowest && (
+                        <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50 animate-pulse">
+                          ★ Tasa Más Baja
+                        </span>
+                      )}
+                    </div>
 
-                <div className="border-t border-slate-100 pt-3.5 flex justify-end">
-                  <a
-                    href={p.officialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] uppercase font-bold text-slate-400 hover:text-indigo-650"
-                  >
-                    Sitio oficial
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                    {/* Prominent Rate Display Area */}
+                    <div className="mb-4 bg-slate-50/70 dark:bg-slate-950/40 rounded-xl p-3 border border-slate-100 dark:border-slate-800/60 flex items-center justify-between shadow-3xs">
+                      <div className="flex flex-col">
+                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
+                          Tasa de Cobro
+                        </span>
+                        <span className="text-xs text-slate-550 dark:text-slate-400 font-bold">
+                          Por transacción
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-3xl font-black tracking-tight ${isLowest ? 'text-emerald-600 dark:text-emerald-400' : 'text-indigo-600 dark:text-indigo-400'}`}>
+                          {(p.baseRate * 100).toFixed(2)}%
+                        </span>
+                        <span className="block text-[8px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest mt-0.5">
+                          + IVA del costo
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4 font-semibold">
+                      {p.description}
+                    </p>
+                    
+                    {/* Bullet points for benefits */}
+                    <ul className="space-y-1.5 mt-2 mb-4">
+                      {p.benefits.map((b) => (
+                        <li key={b} className="text-[11px] text-slate-600 dark:text-slate-300 flex items-center gap-1.5 font-bold">
+                          <span className="w-1 h-1 rounded-full bg-indigo-500" />
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="border-t border-slate-100 dark:border-slate-800/80 pt-3.5 flex justify-end">
+                    <a
+                      href={p.officialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] uppercase font-bold text-slate-400 hover:text-indigo-650 dark:hover:text-indigo-400"
+                    >
+                      Sitio oficial
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
 
       </div>
