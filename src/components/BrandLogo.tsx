@@ -8,7 +8,7 @@ interface BrandLogoProps {
 
 export default function BrandLogo({ name, size = "md", className = "" }: BrandLogoProps) {
   const normalizedName = name.toLowerCase().trim();
-  const [imageError, setImageError] = useState(false);
+  const [extIndex, setExtIndex] = useState(0); // 0 = .png, 1 = .svg, 2 = fallback SVG
 
   // Size mapping
   const sizeClasses = {
@@ -24,9 +24,10 @@ export default function BrandLogo({ name, size = "md", className = "" }: BrandLo
   // Map normalized brand names to local file names (supporting custom uploaded assets in public/logos/)
   const getLocalLogoPath = () => {
     if (normalizedName.includes("uala") || normalizedName.includes("ualá")) return "uala";
-    if (normalizedName.includes("mercado pago") || normalizedName.includes("mercadopago")) return "mercadopago";
+    if (normalizedName.includes("mercado pago") || normalizedName.includes("mercadopago")) return "mercado-pago";
     if (normalizedName.includes("zettle") || normalizedName.includes("paypal")) return "zettle";
     if (normalizedName.includes("clip")) return "clip";
+    if (normalizedName.includes("sumup")) return "sumup";
     if (normalizedName.includes("netpay")) return "netpay";
     if (normalizedName.includes("sr. pago") || normalizedName.includes("srpago")) return "srpago";
     if (normalizedName.includes("billpocket")) return "billpocket";
@@ -35,16 +36,17 @@ export default function BrandLogo({ name, size = "md", className = "" }: BrandLo
     if (normalizedName.includes("didi")) return "didi";
     if (normalizedName.includes("plata")) return "plata";
     if (normalizedName.includes("bbva")) return "bbva";
-    if (normalizedName.includes("getnet") || normalizedName.includes("santander")) return "getnet";
+    if (normalizedName.includes("getnet") || normalizedName.includes("santander")) return "santander";
+    if (normalizedName.includes("citibanamex") || normalizedName.includes("banamex")) return "citibanamex";
+    if (normalizedName.includes("hsbc")) return "hsbc";
     if (normalizedName.includes("baubap")) return "baubap";
     return "";
   };
 
   const brandKey = getLocalLogoPath();
   
-  // Custom images are hosted in `/logos/` folder inside the `public` directory
-  // (e.g. `/public/logos/clip.svg` is accessible as `/logos/clip.svg` in Vite)
-  const localImageUrl = brandKey ? `/logos/${brandKey}.png` : "";
+  const extensions = ["png", "svg"];
+  const localImageUrl = brandKey && extIndex < extensions.length ? `/logos/${brandKey}.${extensions[extIndex]}` : "";
 
   // Render high-fidelity, polished, responsive inline SVG vectors as the beautiful out-of-the-box fallback
   const renderFallbackLogo = () => {
@@ -244,6 +246,48 @@ export default function BrandLogo({ name, size = "md", className = "" }: BrandLo
           </div>
         );
 
+      case normalizedName.includes("sumup"):
+        return (
+          <div 
+            className={`flex items-center justify-center bg-[#0066FF] text-white shadow-xs font-bold shrink-0 overflow-hidden ${currentSizeClass} ${className}`}
+            title="SumUp"
+          >
+            <svg viewBox="0 0 100 100" className="w-6/12 h-6/12 fill-none stroke-current" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M25 65 C25 50, 45 50, 50 35 C55 20, 75 20, 75 35" />
+              <path d="M25 35 L42 35 L42 52" />
+              <path d="M75 65 L58 65 L58 48" />
+            </svg>
+          </div>
+        );
+
+      case normalizedName.includes("citibanamex") || normalizedName.includes("banamex"):
+        return (
+          <div 
+            className={`flex items-center justify-center bg-[#004B87] text-white shadow-xs font-bold shrink-0 overflow-hidden ${currentSizeClass} ${className}`}
+            title="Citibanamex"
+          >
+            <svg viewBox="0 0 100 100" className="w-6/12 h-6/12 fill-current">
+              <circle cx="50" cy="50" r="10" />
+              <path d="M50 15 L58 34 L42 34 Z M50 85 L58 66 L42 66 Z M15 50 L34 42 L34 58 Z M85 50 L66 42 L66 58 Z" />
+            </svg>
+          </div>
+        );
+
+      case normalizedName.includes("hsbc"):
+        return (
+          <div 
+            className={`flex items-center justify-center bg-[#DB0011] text-white shadow-xs font-bold shrink-0 overflow-hidden ${currentSizeClass} ${className}`}
+            title="HSBC"
+          >
+            <svg viewBox="0 0 100 100" className="w-7/12 h-7/12 fill-current">
+              <polygon points="10,50 30,25 30,75" />
+              <polygon points="90,50 70,25 70,75" />
+              <polygon points="30,25 70,25 50,50" />
+              <polygon points="30,75 70,75 50,50" />
+            </svg>
+          </div>
+        );
+
       default:
         return (
           <div 
@@ -261,8 +305,8 @@ export default function BrandLogo({ name, size = "md", className = "" }: BrandLo
     }
   };
 
-  // If there's an image error, or we haven't mapped the brand to a static logo, render the high fidelity SVG fallback
-  if (imageError || !localImageUrl) {
+  // If all extensions failed or we haven't mapped the brand to a static logo, render the high fidelity SVG fallback
+  if (!localImageUrl) {
     return renderFallbackLogo();
   }
 
@@ -271,7 +315,7 @@ export default function BrandLogo({ name, size = "md", className = "" }: BrandLo
     <img
       src={localImageUrl}
       alt={`${name} Logo`}
-      onError={() => setImageError(true)}
+      onError={() => setExtIndex((prev) => prev + 1)}
       referrerPolicy="no-referrer"
       className={`object-contain bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 shrink-0 p-1 select-none pointer-events-none ${currentSizeClass} ${className}`}
       title={name}

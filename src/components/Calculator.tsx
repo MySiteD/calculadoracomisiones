@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { providers } from "../data";
+import { providers, referidos, promotions } from "../data";
 import BrandLogo from "./BrandLogo";
 import { CalculationResult } from "../types";
-import { trackSimulate } from "../utils/analytics";
+import { trackSimulate, trackReferralClick } from "../utils/analytics";
 import { trackCalculation } from "../lib/firebase";
 import { jsPDF } from "jspdf";
 import { motion, AnimatePresence } from "motion/react";
@@ -29,7 +29,10 @@ import {
   Share2,
   Copy,
   Mail,
-  MessageSquare
+  MessageSquare,
+  ExternalLink,
+  Award,
+  Zap
 } from "lucide-react";
 
 interface HistoryEntry {
@@ -65,13 +68,16 @@ function Tooltip({ content }: { content: string }) {
   );
 }
 
+const QUICK_AMOUNTS = ["500", "1000", "2500", "5000", "10000", "25000"];
+
 export default function Calculator() {
-  const [amount, setAmount] = useState<string>("");
+  const [amount, setAmount] = useState<string>("1000");
   const [paymentMethod, setPaymentMethod] = useState<string>("regular");
   const [msiMonths, setMsiMonths] = useState<string>("3");
+  const [categoryFilter, setCategoryFilter] = useState<"all" | "fintech" | "banco">("all");
   const [results, setResults] = useState<CalculationResult[]>([]);
   const [calcCount, setCalcCount] = useState<number>(0);
-  const [hasCalculated, setHasCalculated] = useState<boolean>(false);
+  const [hasCalculated, setHasCalculated] = useState<boolean>(true);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [selectedComparison, setSelectedComparison] = useState<string[]>([]);
   const [isConfiguring, setIsConfiguring] = useState<boolean>(false);
@@ -170,43 +176,50 @@ export default function Calculator() {
       doc.setFont("helvetica", "normal");
       doc.text(`Metodo de Procesamiento:`, 20, currentY + 18);
       doc.setFont("helvetica", "bold");
-      const schemeText = paymentMethod === "msi" ? `Meses Sin Intereses (${msiMonths} Meses)` : "Regular / Debito y Credito (1 Exhibicion)";
+      const schemeText = paymentMethod === "msi" 
+        ? `Meses Sin Intereses (${msiMonths} Meses)` 
+        : paymentMethod === "debito"
+          ? "Tarjeta de Debito (1 Exhibicion)"
+          : paymentMethod === "credito"
+            ? "Tarjeta de Credito (1 Exhibicion)"
+            : "Estándar / Debito y Credito (1 Exhibicion)";
       doc.text(schemeText, 65, currentY + 18);
 
-      currentY += 34;
+      currentY += 32;
 
       // Table Header Label
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
+      doc.setFontSize(9.5);
       doc.setTextColor(grayDark[0], grayDark[1], grayDark[2]);
-      doc.text("COMPARATIVA DE PROVEEDORES DE TPV", 15, currentY);
+      doc.text("COMPARATIVA DE PROVEEDORES DE TPV (FINTECH Y BANCOS)", 15, currentY);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.setTextColor(textMuted[0], textMuted[1], textMuted[2]);
-      doc.text("(Resultados ordenados de mayor a menor beneficio de retorno liquido)", 15, currentY + 4);
+      doc.text("(Resultados ordenados de mayor a menor beneficio de retorno liquido por transaccion)", 15, currentY + 4);
 
-      currentY += 8;
+      currentY += 7;
 
       // Drawing Table Header Row
       doc.setFillColor(241, 245, 249); // slate-100
-      doc.rect(15, currentY, pageWidth - 30, 8, "F");
+      doc.rect(15, currentY, pageWidth - 30, 7, "F");
       doc.setDrawColor(borderCol[0], borderCol[1], borderCol[2]);
       doc.line(15, currentY, pageWidth - 15, currentY);
-      doc.line(15, currentY + 8, pageWidth - 15, currentY + 8);
+      doc.line(15, currentY + 7, pageWidth - 15, currentY + 7);
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.setTextColor(grayDark[0], grayDark[1], grayDark[2]);
-      doc.text("Proveedor", 18, currentY + 5.5);
-      doc.text("Tasa Efec.", 65, currentY + 5.5);
-      doc.text("Comision Brut.", 90, currentY + 5.5);
-      doc.text("IVA desgl.", 115, currentY + 5.5);
-      doc.text("Deposito Neto", 140, currentY + 5.5);
-      doc.text("Dif. vs Mejor", 172, currentY + 5.5);
+      doc.text("Proveedor", 18, currentY + 4.8);
+      doc.text("Tasa Base", 65, currentY + 4.8);
+      doc.text("Comision Brut.", 90, currentY + 4.8);
+      doc.text("IVA desgl.", 115, currentY + 4.8);
+      doc.text("Deposito Neto", 140, currentY + 4.8);
+      doc.text("Dif. vs Mejor", 172, currentY + 4.8);
 
-      currentY += 8;
+      currentY += 7;
 
       const winnerPayout = results[0]?.netPayout || 0;
+      const rowHeight = results.length > 9 ? 7.4 : 9.0;
 
       // Draw rows
       results.forEach((r, index) => {
@@ -218,7 +231,7 @@ export default function Calculator() {
         } else {
           doc.setFillColor(255, 255, 255);
         }
-        doc.rect(15, currentY, pageWidth - 30, 9.5, "F");
+        doc.rect(15, currentY, pageWidth - 30, rowHeight, "F");
 
         // Set text colors & font style
         if (index === 0) {
@@ -239,10 +252,10 @@ export default function Calculator() {
               ]
             : [79, 70, 229];
           doc.setFillColor(rgb[0], rgb[1], rgb[2]);
-          doc.rect(18, currentY + 3.2, 2.5, 2.5, "F");
+          doc.rect(18, currentY + (rowHeight / 2 - 1.2), 2.3, 2.3, "F");
         } catch (e) {
           doc.setFillColor(100, 116, 139);
-          doc.rect(18, currentY + 3.2, 2.5, 2.5, "F");
+          doc.rect(18, currentY + (rowHeight / 2 - 1.2), 2.3, 2.3, "F");
         }
 
         // Reassert font settings
@@ -254,62 +267,63 @@ export default function Calculator() {
           doc.setFont("helvetica", "normal");
         }
 
-        doc.setFontSize(8);
-        doc.text(r.name, 22, currentY + 6);
-        doc.text(`${(r.usedRate * 100).toFixed(2)}%`, 65, currentY + 6);
-        doc.text(`$${r.commission.toFixed(2)}`, 90, currentY + 6);
-        doc.text(`$${r.iva.toFixed(2)}`, 115, currentY + 6);
+        const textY = currentY + (rowHeight * 0.65);
+        doc.setFontSize(7.5);
+        doc.text(`${r.name} ${r.category === "banco" ? "[Banco]" : "[Fintech]"}`, 22, textY);
+        doc.text(`${(r.usedRate * 100).toFixed(2)}%`, 65, textY);
+        doc.text(`$${r.commission.toFixed(2)}`, 90, textY);
+        doc.text(`$${r.iva.toFixed(2)}`, 115, textY);
 
         if (index === 0) {
           doc.setFont("helvetica", "bold");
         }
-        doc.text(`$${r.netPayout.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 140, currentY + 6);
+        doc.text(`$${r.netPayout.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 140, textY);
 
         // Difference vs the top winner
         const difference = r.netPayout - winnerPayout;
         if (index === 0) {
           doc.setFont("helvetica", "bold");
           doc.setTextColor(16, 185, 129); // green
-          doc.text("Tarifa Optima", 172, currentY + 6);
+          doc.text("Tarifa Optima", 172, textY);
         } else {
           doc.setTextColor(239, 68, 68); // red
-          doc.text(`-$${Math.abs(difference).toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 172, currentY + 6);
+          doc.text(`-$${Math.abs(difference).toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 172, textY);
         }
 
         // Draw horizontal line separator
         doc.setDrawColor(241, 245, 249);
         doc.setLineWidth(0.2);
-        doc.line(15, currentY + 9.5, pageWidth - 15, currentY + 9.5);
+        doc.line(15, currentY + rowHeight, pageWidth - 15, currentY + rowHeight);
 
-        currentY += 9.5;
+        currentY += rowHeight;
       });
 
-      currentY += 8;
+      currentY += 5;
 
       // Disclaimer Box
       doc.setFillColor(254, 253, 237); // Light amber background
       doc.setDrawColor(254, 240, 138); // Soft yellow border
-      doc.roundedRect(15, currentY, pageWidth - 30, 26, 2, 2, "FD");
+      doc.roundedRect(15, currentY, pageWidth - 30, 25, 2, 2, "FD");
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.setTextColor(133, 77, 14); // Dark gold
-      doc.text("AVISO LEGAL Y EXCLUSION DE RESPONSABILIDAD:", 18, currentY + 5);
+      doc.text("AVISO LEGAL Y EXCLUSION DE RESPONSABILIDAD:", 18, currentY + 4.8);
 
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(7.5);
+      doc.setFontSize(7);
       doc.setTextColor(113, 63, 18);
-      const splitDisclaimer1 = "Este reporte es un simulador de caracter estimativo e informativo basado en las tasas publicas de los agregadores";
-      const splitDisclaimer2 = "en Mexico a junio de 2026. Por mandato de ley, las comisiones gravan 16% de IVA, el cual desglosamos aqui para";
-      const splitDisclaimer3 = "reflejar tu liquidez neta real. Caja de Herramientas y Mas no garantiza la exactitud absoluta de los valores ni";
+      const splitDisclaimer1 = "Este reporte es un simulador de caracter estimativo e informativo basado en las tasas publicas de agregadores fintech y";
+      const splitDisclaimer2 = "bancos en Mexico vigentes en 2026. Las terminales bancarias tradicionales pueden requerir renta mensual o facturacion minima.";
+      const splitDisclaimer3 = "Por ley, las comisiones gravan 16% de IVA desglosado aqui. Caja de Herramientas y Mas no garantiza la exactitud absoluta ni";
       const splitDisclaimer4 = "se hace responsable por cambios de tarifas o politicas de los proveedores, ni por decisiones tomadas con este reporte.";
-      doc.text(splitDisclaimer1, 18, currentY + 10);
-      doc.text(splitDisclaimer2, 18, currentY + 14);
-      doc.text(splitDisclaimer3, 18, currentY + 18);
-      doc.text(splitDisclaimer4, 18, currentY + 22);
+      doc.text(splitDisclaimer1, 18, currentY + 9.5);
+      doc.text(splitDisclaimer2, 18, currentY + 13.5);
+      doc.text(splitDisclaimer3, 18, currentY + 17.5);
+      doc.text(splitDisclaimer4, 18, currentY + 21.5);
 
       // Footer
-      const footerY = pageHeight - 24;
+      const footerY = pageHeight - 22;
       doc.setDrawColor(226, 232, 240);
       doc.line(15, footerY - 4, pageWidth - 15, footerY - 4);
       
@@ -336,7 +350,75 @@ export default function Calculator() {
     }
   };
 
-  const runCalculation = (amountVal: string, methodVal: string, msiVal: string) => {
+  const computeResultsList = (amountVal: string, methodVal: string, msiVal: string): CalculationResult[] => {
+    const parsedAmount = parseFloat(amountVal);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      return [];
+    }
+
+    const isMsi = methodVal === "msi";
+    return providers.map((p) => {
+      let activeRate = p.baseRate;
+      if (methodVal === "debito" && p.debitRate !== undefined) {
+        activeRate = p.debitRate;
+      } else if (methodVal === "credito" && p.creditRate !== undefined) {
+        activeRate = p.creditRate;
+      } else if (isMsi) {
+        const baseForMsi = p.creditRate !== undefined ? p.creditRate : p.baseRate;
+        const extraMsiRate = p.msiRates[msiVal] || 0;
+        activeRate = baseForMsi + extraMsiRate;
+      }
+
+      const commission = parsedAmount * activeRate;
+      const iva = commission * 0.16;
+      const totalCommission = commission + iva;
+      const netPayout = parsedAmount - totalCommission;
+
+      return {
+        name: p.name,
+        category: p.category,
+        usedRate: activeRate,
+        commission,
+        iva,
+        totalCommission,
+        netPayout,
+        monthlyRentText: p.monthlyRentText,
+        minVolumeText: p.minVolumeText,
+        rateRangeText: p.rateRangeText,
+        color: p.color,
+        textColor: p.textColor,
+        badgeBg: p.badgeBg,
+      };
+    }).sort((a, b) => b.netPayout - a.netPayout);
+  };
+
+  // Real-time calculation whenever amount, paymentMethod, or msiMonths changes
+  useEffect(() => {
+    const computedResults = computeResultsList(amount, paymentMethod, msiMonths);
+    setResults(computedResults);
+    setHasCalculated(true);
+
+    if (computedResults.length > 0 && selectedComparison.length === 0) {
+      let initialComparison: string[] = [];
+      const savedConfig = localStorage.getItem("default_providers_comparison");
+      if (savedConfig) {
+        try {
+          const parsed = JSON.parse(savedConfig) as string[];
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            initialComparison = parsed.filter(name => computedResults.some(res => res.name === name));
+          }
+        } catch (e) {
+          console.error("Error loading user default TPVs:", e);
+        }
+      }
+      if (initialComparison.length === 0) {
+        initialComparison = computedResults.slice(0, 3).map(r => r.name);
+      }
+      setSelectedComparison(initialComparison);
+    }
+  }, [amount, paymentMethod, msiMonths]);
+
+  const runCalculation = (amountVal: string, methodVal: string, msiVal: string, shouldScroll = true) => {
     const parsedAmount = parseFloat(amountVal);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
       setResults([]);
@@ -350,54 +432,10 @@ export default function Calculator() {
     // Increment calculations count in real-time Firestore database
     trackCalculation();
 
-    // Process calculations
     const isMsi = methodVal === "msi";
-    const computedResults: CalculationResult[] = providers.map((p) => {
-      let activeRate = p.baseRate;
-      if (isMsi) {
-        const extraMsiRate = p.msiRates[msiVal] || 0;
-        activeRate = p.baseRate + extraMsiRate;
-      }
-
-      const commission = parsedAmount * activeRate;
-      const iva = commission * 0.16;
-      const totalCommission = commission + iva;
-      const netPayout = parsedAmount - totalCommission;
-
-      return {
-        name: p.name,
-        usedRate: activeRate,
-        commission,
-        iva,
-        totalCommission,
-        netPayout,
-        color: p.color,
-        textColor: p.textColor,
-        badgeBg: p.badgeBg,
-      };
-    }).sort((a, b) => b.netPayout - a.netPayout);
-
+    const computedResults = computeResultsList(amountVal, methodVal, msiVal);
     setResults(computedResults);
     setHasCalculated(true);
-    
-    // Auto-select top 3 for the side-by-side comparison OR load custom local defaults
-    let initialComparison: string[] = [];
-    const savedConfig = localStorage.getItem("default_providers_comparison");
-    if (savedConfig) {
-      try {
-        const parsed = JSON.parse(savedConfig) as string[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          initialComparison = parsed.filter(name => computedResults.some(res => res.name === name));
-        }
-      } catch (e) {
-        console.error("Error loading user default TPVs:", e);
-      }
-    }
-
-    if (initialComparison.length === 0) {
-      initialComparison = computedResults.slice(0, 3).map(r => r.name);
-    }
-    setSelectedComparison(initialComparison);
 
     // Save calculation metrics
     const newCount = calcCount + 1;
@@ -422,13 +460,19 @@ export default function Calculator() {
       return updated;
     });
 
-    // Scroll to results cleanly
-    setTimeout(() => {
-      const el = document.getElementById("comparador-resultados");
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 100);
+    if (shouldScroll) {
+      setTimeout(() => {
+        const el = document.getElementById("comparador-resultados");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    }
+  };
+
+  const handleQuickAmount = (presetVal: string) => {
+    setAmount(presetVal);
+    runCalculation(presetVal, paymentMethod, msiMonths, false);
   };
 
   const handleCalculate = (e?: React.FormEvent) => {
@@ -506,7 +550,7 @@ export default function Calculator() {
   };
 
   return (
-    <section id="inicio" className="py-16 relative overflow-hidden">
+    <section id="inicio" className="pt-6 pb-16 relative overflow-hidden">
       {/* Gentle Section Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-[110px] pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 left-10 w-[400px] h-[400px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none -z-10" />
@@ -514,44 +558,77 @@ export default function Calculator() {
       <div className="container mx-auto px-4 md:px-6 max-w-4xl">
         
         {/* Main Dashboard Card */}
-        <div id="simulador-card" className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 md:p-10 shadow-xl shadow-slate-100 dark:shadow-none relative overflow-hidden">
+        <div id="simulador-card" className="bg-white dark:bg-slate-900 border-2 border-indigo-500/20 dark:border-indigo-500/30 rounded-3xl p-5 md:p-8 shadow-xl shadow-indigo-500/5 dark:shadow-none relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
           
-          <div className="text-center max-w-sm mx-auto mb-8">
-            <span className="text-xs font-bold text-indigo-700 tracking-wider uppercase bg-indigo-50 border border-indigo-100 px-3 py-1.2 rounded-full shadow-sm">
-              Simulador Interactivo
-            </span>
-            <h2 className="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight mt-4">
-              Ingresa el monto de tu cobro
-            </h2>
-            <p className="text-xs text-slate-500 mt-1.5 font-medium">
-              Compara de manera equitativa e inmediata el costo de las pasarelas.
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-indigo-700 dark:text-indigo-300 tracking-wider uppercase bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/60 px-2.5 py-1 rounded-full">
+                <Zap className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
+                Simulador en Tiempo Real
+              </span>
+              <h2 className="text-lg md:text-xl font-black text-slate-900 dark:text-white tracking-tight mt-2">
+                Ingresa o selecciona el monto de tu cobro
+              </h2>
+            </div>
+            <p className="text-[11px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/50 px-3 py-1.5 rounded-xl font-extrabold self-start sm:self-center">
+              ✓ Resultados actualizados al instante
             </p>
           </div>
 
-          <form onSubmit={handleCalculate} className="space-y-6">
+          <form onSubmit={handleCalculate} className="space-y-5">
             
-            {/* Massive Amount Input Wrapper */}
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <label htmlFor="amount" className="block text-xs font-bold text-slate-500 uppercase tracking-wide">
-                  Monto del Cobro a Simular (MXN)
-                </label>
-                <Tooltip content="Monto Bruto: El importe original de tu venta sobre el cual se calcularán las retenciones de comisión e IVA." />
+            {/* Massive Amount Input Wrapper + Quick Presets */}
+            <div className="space-y-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center">
+                  <label htmlFor="amount" className="block text-xs font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wide">
+                    Monto del Cobro a Simular (MXN)
+                  </label>
+                  <Tooltip content="Monto Bruto: El importe original de tu venta sobre el cual se calcularán las retenciones de comisión e IVA." />
+                </div>
+                <span className="text-[10px] font-bold text-slate-400">
+                  Toca un monto rápido o escribe cualquier cantidad:
+                </span>
               </div>
-              <div className="flex items-center bg-slate-50 border border-slate-250/80 focus-within:border-indigo-500 focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(99,102,241,0.08)] rounded-xl px-5 py-4 transition-all duration-300">
-                <span className="text-slate-400 text-3xl font-extrabold mr-3">$</span>
+
+              {/* 1-Click Quick Amount Buttons */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                {QUICK_AMOUNTS.map((preset) => {
+                  const isActivePreset = amount === preset;
+                  return (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => handleQuickAmount(preset)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+                        isActivePreset
+                          ? "bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-500/20 scale-[1.02]"
+                          : "bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50"
+                      }`}
+                    >
+                      ${parseInt(preset, 10).toLocaleString("es-MX")}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center bg-slate-50 dark:bg-slate-950 border-2 border-indigo-200 dark:border-slate-700 focus-within:border-indigo-600 focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:shadow-[0_0_20px_rgba(99,102,241,0.12)] rounded-2xl px-5 py-3.5 transition-all duration-300">
+                <span className="text-indigo-600 dark:text-indigo-400 text-3xl font-black mr-3">$</span>
                 <input
                   type="number"
                   step="any"
                   id="amount"
-                  placeholder="0.00"
+                  placeholder="1000.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="bg-transparent w-full border-none outline-none text-slate-900 text-3xl md:text-4xl font-extrabold focus:ring-0 placeholder-slate-300"
+                  className="bg-transparent w-full border-none outline-none text-slate-900 dark:text-white text-2xl md:text-4xl font-black focus:ring-0 placeholder-slate-300"
                   required
                   min="0.01"
                 />
+                <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider ml-2 shrink-0">
+                  MXN
+                </span>
               </div>
             </div>
 
@@ -573,7 +650,9 @@ export default function Calculator() {
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl py-3.5 px-4 font-semibold text-xs md:text-sm tracking-wide focus:border-indigo-500 focus:bg-white focus:outline-none cursor-pointer shadow-sm"
                   >
-                    <option value="regular">Venta Estándar (Débito o Crédito una sola exhibición)</option>
+                    <option value="regular">Venta Estándar (Tasa única Fintech / Pyme Bancaria)</option>
+                    <option value="debito">Tarjeta de Débito (1 Exhibición - Tasas Bancarias / Fintech)</option>
+                    <option value="credito">Tarjeta de Crédito (1 Exhibición - Tasas Bancarias / Fintech)</option>
                     <option value="msi">Meses Sin Intereses (Financiamiento MSI)</option>
                   </select>
                 </div>
@@ -1048,9 +1127,54 @@ export default function Calculator() {
               </div>
             ) : (
               <div className="space-y-4">
-                {results.map((r, idx) => {
+                {/* Category Filter Tabs */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                  <span className="text-xs font-extrabold text-slate-600 dark:text-slate-300 px-1">
+                    Filtrar por esquema de terminal:
+                  </span>
+                  <div className="inline-flex p-1 rounded-xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 self-start sm:self-auto">
+                    <button
+                      type="button"
+                      onClick={() => setCategoryFilter("all")}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                        categoryFilter === "all"
+                          ? "bg-indigo-600 text-white shadow-xs"
+                          : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                      }`}
+                    >
+                      Todas ({results.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCategoryFilter("fintech")}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                        categoryFilter === "fintech"
+                          ? "bg-indigo-600 text-white shadow-xs"
+                          : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                      }`}
+                    >
+                      Agregadores Fintech ({results.filter(r => r.category === "fintech").length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCategoryFilter("banco")}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                        categoryFilter === "banco"
+                          ? "bg-indigo-600 text-white shadow-xs"
+                          : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                      }`}
+                    >
+                      Bancos Tradicionales ({results.filter(r => r.category === "banco").length})
+                    </button>
+                  </div>
+                </div>
+
+                {results
+                  .filter((r) => categoryFilter === "all" || r.category === categoryFilter)
+                  .map((r, idx, filteredArr) => {
                   const isWinner = idx === 0;
-                  const isLoser = idx === results.length - 1;
+                  const isLoser = idx === filteredArr.length - 1 && filteredArr.length > 1;
+                  const isBank = r.category === "banco";
 
                   return (
                     <div 
@@ -1064,10 +1188,18 @@ export default function Calculator() {
                     >
                       {/* Left: Brand Metadata */}
                       <div className="flex flex-col items-start gap-2.5">
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2.5">
                           <BrandLogo name={r.name} size="sm" />
                           <h4 className="text-slate-900 text-lg font-black leading-none">{r.name}</h4>
                           
+                          <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded border ${
+                            isBank
+                              ? "bg-blue-50 text-blue-700 border-blue-200"
+                              : "bg-indigo-50 text-indigo-700 border-indigo-200"
+                          }`}>
+                            {isBank ? "Banco Tradicional" : "Fintech ($0 Renta)"}
+                          </span>
+
                           <button
                             type="button"
                             onClick={(e) => {
@@ -1110,8 +1242,8 @@ export default function Calculator() {
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-500 mt-1 font-semibold">
                           <div className="flex items-center gap-1">
                             <Percent className="text-slate-400 w-3.5 h-3.5" />
-                            <span>Tasa Efectiva: <strong className="text-slate-700">{(r.usedRate * 100).toFixed(2)}%</strong></span>
-                            <Tooltip content="Tasa Efectiva: Porcentaje bruto real descontado por la terminal (Tasa base + recargo MSI del plazo elegido, antes de impuestos)." />
+                            <span>Tasa Base: <strong className="text-slate-700">{(r.usedRate * 100).toFixed(2)}%</strong> <span className="text-[10px] text-indigo-600 font-bold">({(r.usedRate * 1.16 * 100).toFixed(2)}% c/IVA)</span></span>
+                            <Tooltip content="Tasa Base y Efectiva: Porcentaje cobrado por la terminal antes de IVA y su equivalente efectivo sumando el 16% de IVA." />
                           </div>
                           <div className="flex items-center gap-1">
                             <Coins className="text-slate-400 w-3.5 h-3.5" />
@@ -1119,24 +1251,80 @@ export default function Calculator() {
                             <Tooltip content="Comisión Bruta: Cargo por procesamiento original antes de aplicar el 16% de IVA sobre las comisiones." />
                           </div>
                           <div className="flex items-center gap-1">
-                            <span className="text-slate-400 text-[10px] font-bold">IVA desglosado:</span>
+                            <span className="text-slate-400 text-[10px] font-bold">IVA (16%):</span>
                             <span className="text-slate-700 font-bold">${r.iva.toFixed(2)}</span>
-                            <Tooltip content="IVA Desglosado: El 16% de IVA exigegible por ley que se calcula únicamente sobre la comisión bruta de la terminal, no sobre la venta del negocio." />
+                            <Tooltip content="IVA Desglosado: El 16% de IVA exigible por ley que se calcula únicamente sobre la comisión bruta de la terminal, no sobre la venta del negocio." />
                           </div>
                         </div>
+
+                        {/* Bank/Fintech fixed cost or rent note */}
+                        {isBank && (r.monthlyRentText || r.minVolumeText) && (
+                          <div className="text-[10px] text-amber-800 bg-amber-50/80 border border-amber-200/60 px-2.5 py-1 rounded-lg font-semibold">
+                            <strong>Condición Bancaria:</strong> {r.monthlyRentText} {r.minVolumeText ? `· ${r.minVolumeText}` : ""}
+                          </div>
+                        )}
                       </div>
 
-                      {/* Right: Net deposit value */}
-                      <div className="w-full md:w-auto text-left md:text-right border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6 min-w-[190px] flex md:flex-col justify-between md:justify-center items-center md:items-end">
-                        <div className="flex items-center gap-1">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                            Depósito Neto Proyectado
+                      {/* Right: Net deposit value + Direct Conversion CTA */}
+                      <div className="w-full md:w-auto text-left md:text-right border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6 min-w-[215px] flex flex-row md:flex-col justify-between md:justify-center items-center md:items-end gap-3">
+                        <div>
+                          <div className="flex items-center md:justify-end gap-1">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                              Depósito Neto Proyectado
+                            </span>
+                            <Tooltip content="Depósito Neto: Dinero total líquido que recibirás en tu banco una vez retenidos el costo de operación y su IVA correspondiente." />
+                          </div>
+                          <span className={`text-2xl font-black tracking-tight block ${isWinner ? 'text-indigo-650' : 'text-slate-800'}`}>
+                            ${r.netPayout.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </span>
-                          <Tooltip content="Depósito Neto: Dinero total líquido que recibirás en tu banco una vez retenidos el costo de operación y su IVA correspondiente." />
                         </div>
-                        <span className={`text-2xl font-black tracking-tight block ${isWinner ? 'text-indigo-650' : 'text-slate-800'}`}>
-                          ${r.netPayout.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </span>
+
+                        {(() => {
+                          const provObj = providers.find((p) => p.name === r.name);
+                          const refObj = referidos.find((ref) =>
+                            r.name.toLowerCase().includes(ref.provider.toLowerCase()) ||
+                            ref.provider.toLowerCase().includes(r.name.toLowerCase().split(" ")[0])
+                          );
+                          const promoObj = promotions.find((pr) =>
+                            r.name.toLowerCase().includes(pr.name.toLowerCase().split(" ")[0])
+                          );
+                          const actionUrl = refObj?.link || promoObj?.officialUrl || provObj?.officialUrl;
+                          const hasSpecialPromo = Boolean(refObj || promoObj);
+
+                          if (!actionUrl) return null;
+
+                          return (
+                            <a
+                              href={actionUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => {
+                                trackReferralClick(
+                                  refObj?.id || promoObj?.id || `calc-${r.name.toLowerCase().replace(/\s+/g, "-")}`,
+                                  r.name,
+                                  actionUrl
+                                );
+                              }}
+                              className={`inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                                hasSpecialPromo
+                                  ? "bg-amber-500 hover:bg-amber-600 text-white shadow-xs"
+                                  : "bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200"
+                              }`}
+                            >
+                              {hasSpecialPromo ? (
+                                <>
+                                  <Award className="w-3 h-3" />
+                                  <span>Obtener Beneficio</span>
+                                </>
+                              ) : (
+                                <>
+                                  <span>Sitio Oficial</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </>
+                              )}
+                            </a>
+                          );
+                        })()}
                       </div>
                     </div>
                   );

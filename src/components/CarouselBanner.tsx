@@ -23,10 +23,46 @@ interface BannerItem {
 
 const BANNER_ITEMS: BannerItem[] = [
   {
+    id: "bank-terminals-added",
+    type: "rate",
+    title: "🏦 ¡Nuevo! Terminales Bancarias Integradas",
+    description: "Ahora puedes simular y comparar BBVA, Santander (Getnet), Citibanamex, Banorte y HSBC junto a las Fintech.",
+    actionText: "Ver comparativa",
+    actionTargetId: "comisiones",
+    badgeText: "Nueva Integración",
+    colorClass: {
+      bg: "from-indigo-500/8 to-indigo-600/5",
+      border: "border-indigo-200/60",
+      text: "text-indigo-850",
+      darkBg: "dark:from-indigo-950/20 dark:to-indigo-900/10",
+      darkBorder: "dark:border-indigo-900/40",
+      darkText: "dark:text-indigo-300",
+      accent: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-400"
+    }
+  },
+  {
+    id: "fintech-rates-update",
+    type: "info",
+    title: "Tasas Fintech y Bancarias Actualizadas",
+    description: "Integramos SumUp (3.20%+IVA), Ualá Bis (2.99%+IVA y POS Pro desde 1.39%+IVA), Clip, Mercado Pago y Zettle.",
+    actionText: "Simular cobro",
+    actionTargetId: "inicio",
+    badgeText: "Tasas Vigentes",
+    colorClass: {
+      bg: "from-emerald-500/8 to-emerald-600/5",
+      border: "border-emerald-200/60",
+      text: "text-emerald-850",
+      darkBg: "dark:from-emerald-950/20 dark:to-emerald-900/10",
+      darkBorder: "dark:border-emerald-900/40",
+      darkText: "dark:text-emerald-300",
+      accent: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400"
+    }
+  },
+  {
     id: "promo-active",
     type: "promo",
-    title: "🔥 Cupón de Descuento Activo",
-    description: "Ahorra hasta un 60% en tu lector de tarjetas Point o Clip con los enlaces directos oficiales.",
+    title: "🔥 Cupón de Descuento en Lectores",
+    description: "Adquiere tu terminal sin renta mensual (Mercado Pago Point o Clip) con descuento directo oficial.",
     actionText: "Aprovechar cupón",
     actionTargetId: "promociones",
     badgeText: "Descuento",
@@ -39,42 +75,6 @@ const BANNER_ITEMS: BannerItem[] = [
       darkText: "dark:text-amber-300",
       accent: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-400"
     }
-  },
-  {
-    id: "rates-update",
-    type: "rate",
-    title: "Tasas Verificadas (Junio 2026)",
-    description: "Comisiones e IVA del 16% de Clip, Mercado Pago, Zettle y Ualá actualizadas para simulación.",
-    actionText: "Ver tablas de comisión",
-    actionTargetId: "comisiones",
-    badgeText: "Tasas Oficiales",
-    colorClass: {
-      bg: "from-indigo-500/8 to-indigo-600/5",
-      border: "border-indigo-200/60",
-      text: "text-indigo-850",
-      darkBg: "dark:from-indigo-950/20 dark:to-indigo-900/10",
-      darkBorder: "dark:border-indigo-900/40",
-      darkText: "dark:text-indigo-300",
-      accent: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-400"
-    }
-  },
-  {
-    id: "metrics-recalculated",
-    type: "info",
-    title: "Simulación de Impuestos Avanzada",
-    description: "Optimización del cálculo de IVA acreditable e ISR retenido según tu régimen fiscal.",
-    actionText: "Ir a la calculadora",
-    actionTargetId: "inicio",
-    badgeText: "SAT Actualizado",
-    colorClass: {
-      bg: "from-emerald-500/8 to-emerald-600/5",
-      border: "border-emerald-200/60",
-      text: "text-emerald-850",
-      darkBg: "dark:from-emerald-950/20 dark:to-emerald-900/10",
-      darkBorder: "dark:border-emerald-900/40",
-      darkText: "dark:text-emerald-300",
-      accent: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400"
-    }
   }
 ];
 
@@ -85,8 +85,8 @@ export default function CarouselBanner() {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    // Check local storage to respect user dismissal preference
-    const isDismissed = localStorage.getItem("caja_banner_dismissed");
+    // Check local storage to respect user dismissal preference for current version
+    const isDismissed = localStorage.getItem("caja_banner_dismissed_v2");
     if (isDismissed === "true") {
       setIsVisible(false);
     }
@@ -116,7 +116,7 @@ export default function CarouselBanner() {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    localStorage.setItem("caja_banner_dismissed", "true");
+    localStorage.setItem("caja_banner_dismissed_v2", "true");
   };
 
   const handleActionClick = (targetId: string) => {

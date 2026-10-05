@@ -22,8 +22,8 @@ export default function Navbar({ activeSection, theme, toggleTheme }: NavbarProp
 
   const navItems = [
     { id: "inicio", label: "Calculadora", icon: Compass },
-    { id: "asesor-ai", label: "Consultor IA", icon: Sparkles },
     { id: "comisiones", label: "Comisiones", icon: Landmark },
+    { id: "asesor-ai", label: "Consultor IA", icon: Sparkles },
     { id: "promociones", label: "Promociones", icon: Tag },
     { id: "referidos", label: "Recomendados", icon: Award },
   ];

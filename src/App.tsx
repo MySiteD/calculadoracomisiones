@@ -54,7 +54,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["inicio", "asesor-ai", "comisiones", "promociones", "referidos"];
+      const sections = ["inicio", "comisiones", "asesor-ai", "promociones", "referidos"];
       const scrollPosition = window.scrollY + 180; // Buffer offset for floating header
 
       for (const sectionId of sections) {
@@ -172,23 +172,17 @@ export default function App() {
       {/* Layout Content */}
       <main className="relative pb-1" id="landing-container">
         
-        {/* Hero Section */}
+        {/* Compact Above-the-Fold Hero Header */}
         <Hero />
 
-        {/* Real-time Stats & Authority Dashboard */}
-        <StatsDashboard />
-
-        {/* Real-time Testimonials Carousel */}
-        <Testimonials />
-
-        {/* 1. Calculator Section */}
+        {/* 1. Primary Tool: Interactive Calculator & Live Comparison (Immediately visible) */}
         <Calculator />
 
-        {/* 2. AI Smart Advisor Section */}
-        <AiAdvisor />
-
-        {/* 3. Commission Detail & Provider rates */}
+        {/* 2. Commission Detail & Provider rates (Fintech & Traditional Banks) */}
         <ComisionesInfo />
+
+        {/* 3. AI Smart Advisor Section */}
+        <AiAdvisor />
 
         {/* 4. Active Promotions */}
         <Promociones />
@@ -196,7 +190,13 @@ export default function App() {
         {/* 5. Recommended referrals and resources allied */}
         <Referidos />
 
-        {/* 6. AI-powered FAQ & Objections Solver Accordion */}
+        {/* 6. Real-time Stats & Authority Dashboard */}
+        <StatsDashboard />
+
+        {/* 7. Real-time Testimonials Carousel */}
+        <Testimonials />
+
+        {/* 8. AI-powered FAQ & Objections Solver Accordion */}
         <FaqSection />
 
       </main>

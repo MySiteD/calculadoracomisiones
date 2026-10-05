@@ -41,7 +41,7 @@ export default async function handler(req: any, res: any) {
       }
     });
 
-    // Construct detailed context about Mexican payment aggregators
+    // Construct detailed context about Mexican payment aggregators and bank terminals
     const prompt = `Actúa como un Especialista en Consultoría Financiera y Pasarelas de Pago (TPV) para PyMEs mexicanas.
 Analiza la siguiente situación de negocio de un comercio en México:
 - Giro comercial / Nivel de negocio: ${businessType}
@@ -50,21 +50,31 @@ Analiza la siguiente situación de negocio de un comercio en México:
 - ¿Acepta o tiene pensado ofrecer Meses Sin Intereses (MSI)?: ${acceptsMsi ? 'Sí' : 'No'}
 - Plazo preferido de MSI (si aplica): ${preferredPlazo || 'Ninguno'}
 
-Considera el estado del mercado mexicano de terminales no bancarias (Agregadores) en 2026:
-- Ualá Bis: Tasa base del 2.9% + IVA. Es muy económica pero tiene menos variedad de cajeros físicos y menos ecosistema de retiros rápidos inmediatos.
-- Mercado Pago: Tasa base del 3.5% + IVA. Excelente ecosistema integral, crédito PYME, rendimiento de saldo diario y liquidez inmediata las 24/7. Dispositivos Point Air y Point Smart 2.
-- Zettle by PayPal: Tasa base del 3.5% + IVA. Muy profesional para facturación interna, conciliaciones con cuentas comerciales PayPal mundiales y excelente estética.
-- Clip: Tasa base del 3.6% + IVA. Líder en soporte físico, aprobación instantánea, pero tasa ligeramente mayor. Muy reconocido.
+Considera los dos esquemas de terminales punto de venta (TPV) en México en 2026 (recuerda que el IVA del 16% se aplica sobre la comisión cobrada, no sobre el total de la venta):
+
+1. Terminales No Bancarias (Agregadores Fintech - $0 renta mensual, sin cuenta empresarial ni venta mínima):
+- Clip: 3.60% + IVA (4.18% efectiva, $41.76 por cada $1,000 MXN). Débito, crédito y AMEX a la misma tasa. MSI de 3 a 24 meses (sobretasa 4.57% a 27.17% + IVA, mín. $300 MXN). Depósito en 24 a 48 hrs hábiles.
+- Mercado Pago (Point): 3.50% + IVA (4.06% efectiva, $40.60 por cada $1,000 MXN). Débito, crédito, AMEX y vales. MSI de 3 a 18 meses (desde 4.49% hasta ~17.5% + IVA). Depósito inmediato en Mercado Pago Wallet.
+- Zettle by PayPal: 3.50% + IVA (4.06% efectiva). Débito, crédito y AMEX. MSI de 3 a 12 meses. Depósito en 1 a 2 días hábiles en cuenta bancaria.
+- Ualá Bis: 2.99% + IVA estándar (3.47% efectiva). Plan POS Pro desde 1.39% + IVA para giros específicos con Constancia de Situación Fiscal (CSF). Hasta 18 MSI. Depósito inmediato en cuenta Ualá.
+- SumUp: 3.20% a 3.50% + IVA (3.71% a 4.06% efectiva). Depósito de 1 a 3 días hábiles.
+
+2. Terminales Bancarias Tradicionales (Para negocios establecidos con mayor volumen, requieren cuenta empresarial y tienen renta o facturación mínima):
+- BBVA México: Débito 1.00% a 2.50% + IVA; Crédito 1.60% a 2.50% + IVA. Modalidad TPV Portátil Pyme con tasa fija única de 2.15% + IVA (2.49% efectiva). Renta mensual de $200 a $450 + IVA (exenta cobrando $25,000 a $30,000 MXN/mes).
+- Santander (Getnet Smart / TPV): Visa/MC 0.99% a 2.50% + IVA (sector médico desde 0.99%, comercio general 2.13%-2.50%); AMEX 2.90% + IVA. Compra única ($2,500 + IVA) o renta de $250 + IVA/mes.
+- Citibanamex: Débito 1.20% a 2.50% + IVA; Crédito 1.80% a 3.00% + IVA. Afiliación $290 MXN + renta $250-$400 + IVA/mes (facturación mínima $15,000 MXN/mes o aplica penalización).
+- Banorte: Débito 0.85% a 2.50% + IVA; Crédito 1.80% a 2.65% + IVA. Renta de $200 a $350 + IVA/mes exentable con volumen.
+- HSBC México: Menudeo Débito 2.80% + IVA; Crédito 3.60% + IVA. Contratación ~$1,304 + IVA, renta ~$521 + IVA/mes, penalización de $450 + IVA si factura $7,500 MXN o menos al mes.
 
 Por favor, genera un informe personalizado, motivador y sumamente profesional con Markdown estructurado que incluya las siguientes secciones clave:
 
-1. **Análisis de la Estructura de tu Negocio**: Evaluación rápida de cómo influye el ticket promedio y volumen en la rentabilidad de las terminales.
-2. **Recomendación Principal (La Mejor Opción)**: Cuál terminal de pago (TPV) debería elegir como principal (Mercado Pago, Clip, Zettle o Ualá Bis) y justificar detalladamente por qué es la ideal basándose en la tasa base, liquidez o facilidad tecnológica. Elige solo una como ganadora!
-3. **Alternativa Directa (Plan B)**: Cuál terminal de pago podría usar como sistema secundario de respaldo o para un beneficio adicional concreto.
-4. **Estrategia sobre Comisiones e IVA**: Consejos prácticos sobre cómo manejar ese costo (ej. si debe absorberlo, incluirlo sutilmente en el margen, o si vender bajo MSI requiere una recarga del costo) recordando que en México el IVA de la comisión ($16%) es acreditable.
-5. **Próximos Pasos Proactivos**: Una lista corta paso a paso para abrir la cuenta y empezar a facturar de forma simplificada.
+1. **Análisis de la Estructura de tu Negocio (¿Fintech o Banco Tradicional?)**: Evalúa según su volumen mensual y ticket promedio si le conviene más un Agregador Fintech ($0 renta) o dar el salto a una Terminal Bancaria Tradicional (menor tasa pero con meta mensual).
+2. **Recomendación Principal (La Mejor Opción)**: Cuál terminal de pago (TPV) debería elegir como principal y justificar detalladamente con números reales (tasa base y tasa efectiva con IVA, liquidez o exención de renta). ¡Elige una ganadora clara!
+3. **Alternativa Directa (Plan B)**: Cuál terminal (fintech o bancaria) podría usar como respaldo o segunda opción estratégica.
+4. **Estrategia sobre Comisiones, Rentas e IVA**: Consejos prácticos sobre cómo manejar ese costo recordando que en México el IVA del 16% sobre la comisión es acreditable y las comisiones son deducibles ante el SAT.
+5. **Próximos Pasos Proactivos**: Una lista corta paso a paso para implementar la terminal elegida.
 
-Usa un tono premium, consultor empresarial experto, claro y empático. No uses jerga excesivamente abstracta o compleja. Responde al 100% en español de México.`;
+Usa un tono premium, consultor empresarial experto, claro y empático. Responde al 100% en español de México.`;
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
